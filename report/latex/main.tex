@@ -1,0 +1,198 @@
+\documentclass[a4paper,10pt,fontset=none]{ctexart}
+\usepackage[margin=16mm,top=21mm,bottom=17mm,headheight=14pt,headsep=14pt]{geometry}
+\usepackage{amsmath,amssymb,bm,booktabs,array,enumitem}
+\usepackage{xcolor,fancyhdr,hyperref,pgfplots}
+\pgfplotsset{compat=1.18}
+\IfFontExistsTF{Songti TC}{%
+  \setCJKmainfont{Songti TC}%
+}{%
+  \setCJKmainfont[BoldFont=FandolSong-Bold.otf]{FandolSong-Regular.otf}%
+}
+\definecolor{ink}{HTML}{18332F}
+\definecolor{accent}{HTML}{17665D}
+\definecolor{muted}{HTML}{566963}
+\definecolor{rulecolor}{HTML}{CCD9D1}
+\definecolor{plotblue}{HTML}{4477AA}
+\definecolor{plotochre}{HTML}{B57D30}
+\definecolor{plotteal}{HTML}{248A7D}
+\hypersetup{colorlinks=true,urlcolor=accent,linkcolor=accent,
+  pdftitle={混合熵與粒子不可分辨性},
+  pdfsubject={Gibbs paradox、正則取樣與 Einstein 固體},
+  pdfauthor={Coursework project; prepared with OpenAI Codex assistance}}
+\urlstyle{same}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{accent}\sffamily\fontsize{8}{10}\selectfont GIBBS PARADOX / COURSE REPORT}
+\fancyhead[R]{\color{muted}\fontsize{8}{10}\selectfont 2026 / 10 / 21}
+\fancyfoot[L]{\color{muted}\fontsize{8}{10}\selectfont 熱統計物理一\quad Week 6}
+\fancyfoot[R]{\color{muted}\fontsize{8}{10}\selectfont\thepage\,/\,4}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.3pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{rulecolor}\leaders\hrule height\footrulewidth\hfill}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
+\setlength{\abovedisplayshortskip}{5pt}
+\setlength{\belowdisplayshortskip}{5pt}
+\setlength{\emergencystretch}{1.5em}
+\setlist[enumerate]{leftmargin=1.7em,label=\arabic*.,itemsep=3pt,topsep=2pt,parsep=0pt}
+\newcommand{\pagetitle}[1]{%
+  {\color{ink}\bfseries\fontsize{20}{26}\selectfont #1\par}\vspace{5pt}}
+\newcommand{\topic}[1]{%
+  \par\vspace{5pt}{\color{accent}\bfseries\fontsize{12}{17}\selectfont #1\par}\vspace{2pt}}
+\newcommand{\smalltext}[1]{{\fontsize{9}{13.5}\selectfont\color{muted}#1\par}}
+\newcommand{\eq}[1]{\begin{equation*}\color{accent}#1\end{equation*}}
+\newcommand{\kb}{k_{\mathrm B}}
+\newcommand{\ntot}{N_{\mathrm{tot}}}
+\newcommand{\AB}{\mathrm A+\mathrm B}
+\newcommand{\SameSpecies}{\mathrm A+\mathrm A}
+\input{generated/data.tex}
+
+\begin{document}
+\color{ink}
+\fontsize{10.5}{16}\selectfont
+
+% PAGE 1: operation and physical model.
+\pagetitle{混合熵與粒子不可分辨性}
+\smalltext{模型與操作\quad /\quad 單檔互動網頁與可重現數值實驗}
+本網頁以撤除隔板前後的粒子分布，對照不同物種與相同物種的混合。重點是分清楚可觀察的混合程度、平衡熱力學基準，以及粒子不可分辨性對微觀狀態計數的影響。
+
+\topic{操作流程}
+\begin{enumerate}
+  \item 選擇理想粒子或磁偶極硬圓盤，再選擇不同物種 \(\AB\) 或相同物種 \(\SameSpecies\)。\(\SameSpecies\) 可勾選來源顏色；兩色只記錄初始來源，不代表兩種物質。
+  \item 設定每側粒子數、溫度、偶極強度與隨機種子；參數變更會建立新實驗。先保留隔板取樣，再撤除隔板，觀察位置、磁矩方向、左右計數與曲線；可暫停及逐步取樣。
+  \item 比較相同參數與種子下的兩種身分設定；改變強度或溫度可觀察構型與取樣難易度。匯出資料可重現曲線；原理區另可調整振子數與能量量子，核對 Einstein 固體的狀態數。
+\end{enumerate}
+
+\topic{物理模型與單位}
+容器為二維 \(24\times14\)，固定總粒子數 \(\ntot\) 與溫度，採 \(\kb=1\) 的約化單位。理想模型使用可重疊的點粒子。交互作用模型使用直徑 \(\sigma=1\) 的硬圓盤及平面磁矩，所有粒子具有相同作用勢；\(C=0\) 時仍保留硬核排斥。
+\eq{%
+\begin{aligned}
+U_{ij}^{\mathrm{hc}}(r_{ij})&=
+\begin{cases}
+\infty,&r_{ij}<\sigma,\\
+0,&r_{ij}\geq\sigma,
+\end{cases}
+\qquad U=\sum_{i<j}\left(U_{ij}^{\mathrm{hc}}+U_{ij}^{\mathrm{dip}}\right),\\[3pt]
+U_{ij}^{\mathrm{dip}}&=\frac{C}{r_{ij}^{3}}
+\left[\bm n_i\cdot\bm n_j
+-3(\bm n_i\cdot\hat{\bm r}_{ij})(\bm n_j\cdot\hat{\bm r}_{ij})\right].
+\end{aligned}}
+\smalltext{\(\bm n_i\) 為磁矩方向單位向量，\(\hat{\bm r}_{ij}\) 為兩粒子的連線方向。程式逐對計算，不另截斷勢能。首尾沿連線同向時 \(U^{\mathrm{dip}}=-2C/r^3\)，並排同向時 \(U^{\mathrm{dip}}=C/r^3\)。}
+
+\topic{如何計算}
+網頁使用正則系綜 Metropolis Monte Carlo：每個 sweep 嘗試 \(\ntot\) 次更新，每次隨機選一粒子，對位置與角度作對稱提案；越界或重疊即拒絕，其他依下式接受。此方法取樣平衡構型，不提供真實擴散係數或物理混合時間。
+\eq{P_{\mathrm{acc}}=\min\!\left\{1,\exp\!\left(-\frac{\Delta U}{T}\right)\right\},
+\qquad \pi(\bm q)\propto\exp\!\left[-\frac{U(\bm q)}{T}\right].}
+\smalltext{長度以 \(\sigma\) 為單位，\(T\) 與 \(U\) 使用同一能量尺度。升溫改變 Boltzmann 權重；動畫速度只是每秒執行的取樣工作量，sweep 不是物理時間。}
+
+\newpage
+% PAGE 2: measured diagnostic, real data and the reference prediction.
+\pagetitle{計算量與實驗結果}
+將初始左、右兩群來源記為 \(g=L_0,R_0\)，以 \(p_{g,L}=n_{g,L}/N_g\) 記錄各群在左半部的比例，計算無因次指標 \(m\)。初始分離時為 \(0\)，各群左右各半時為 \(\ln2\)。它只反映兩區來源分布，沒有完整計入空間、取向及粒子相關性。
+\eq{m=-\sum_{g\in\{L_0,R_0\}}\frac{N_g}{\ntot}
+\left[p_{g,L}\ln p_{g,L}+(1-p_{g,L})\ln(1-p_{g,L})\right].}
+在等溫、等密度的體相熱力學極限中，基準為
+\eq{\frac{\Delta S_{\mathrm{mix}}}{\ntot\kb}=
+\begin{cases}
+\ln2,&\AB\text{，兩種可區分物種},\\
+0,&\SameSpecies\text{，同種粒子}.
+\end{cases}}
+\smalltext{相同物種仍可呈現來源標籤的混合。有限粒數、隔板排除的可用面積及邊界效應，均不包含在上述體相基準內。}
+\smalltext{每側 \(\PerSide\) 顆，\(T=\Temperature\)，偶極 \(C=\Coupling\)；種子 \SeedList。隔板關閉取樣 \BurnSweeps{} sweeps，撤板後 \OpenSweeps{} sweeps，每 \SampleEvery{} sweeps 記錄；晚期窗為 \LateStart{} 至 \OpenSweeps{} sweeps。}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.98\linewidth,height=59mm,
+  xmin=0,xmax=\OpenSweeps,ymin=0,ymax=0.74,
+  xlabel={MC sweeps},ylabel={\(m\)},
+  tick label style={font=\footnotesize,color=muted},
+  label style={font=\small,color=muted},
+  axis lines=left,axis line style={color=rulecolor},
+  ymajorgrids=true,grid style={color=rulecolor},
+  ytick={0,0.2,0.4,0.6},xtick={0,1000,2000,3000,4000},
+  legend style={at={(0.5,1.05)},anchor=south,draw=none,font=\footnotesize,fill=none},
+  legend columns=3,legend cell align=left,
+  every axis plot/.append style={line width=0.8pt},
+]
+\addplot[color=plotblue] table[x=sweep,y=ideal]{generated/mixing-curves.dat};
+\addlegendentry{理想點粒子}
+\addplot[color=plotochre] table[x=sweep,y=hardcore]{generated/mixing-curves.dat};
+\addlegendentry{硬核 \(C=0\)}
+\addplot[color=plotteal] table[x=sweep,y=dipole]{generated/mixing-curves.dat};
+\addlegendentry{偶極作用}
+\addplot[color=muted,dashed,line width=0.5pt,domain=0:\OpenSweeps,samples=2,forget plot]{ln(2)};
+\node[anchor=south east,font=\footnotesize,text=muted] at (axis cs:\OpenSweeps,0.69314718056){\(\ln2\)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\vspace{-6pt}
+\smalltext{圖：seed 17 的來源左右分布指標。曲線波動與晚期均值反映有限樣本，不足以證明完整平衡；不得解讀為完整熱力學熵或真實時間演化。}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc@{}}
+\toprule
+模型（\(\AB\)）&晚期來源指標 \(m\)&晚期 \(U/(\ntot\kb T)\)&體相 \(\Delta S/(\ntot\kb)\)\\
+\midrule
+\ResultsRows
+\bottomrule
+\end{tabular*}
+\end{center}
+\vspace{-5pt}
+\smalltext{表：每個種子的晚期窗先取平均，再報告種子間平均 \(\pm\) 樣本標準差；不是標準誤。理想點粒子每群 \(\PerSide\) 顆時，均勻平衡的有限樣本期望 \(\mathbb E[m]=\FiniteMean\)，低於上限 \(\ln2\)；此二項分布結果不直接套用於交互作用模型。}
+
+\newpage
+% PAGE 3: both assignment questions, with explicit assumptions.
+\pagetitle{兩題問題的回答}
+\topic{1\quad 短程作用的位能與動量}
+位能通常會影響熵。平衡構型按 \(\exp[-U/(\kb T)]\) 加權，吸引、排斥及取向相關性都會改變構型分布。不能只因作用是短程，就斷言所有混合物的混合熵都等於理想值\,[2]。下式 \(Q\) 為固定參考測度下的無因次構型積分，包含位置與磁矩取向：
+\eq{Z=Z_pQ,\qquad S_{\mathrm{conf}}=\kb\ln Q+\frac{\langle U\rangle}{T}.}
+本模型的 \(\mathrm A/\mathrm B\) 不改變作用勢，且比較同溫、同密度、充分混合後的均勻體相。在熱力學極限中，前後體相的交互作用熵貢獻相消，可分辨物種留下組合混合項：
+\eq{\Delta S_{\mathrm{mix}}=-\kb\sum_{\alpha\in\{\mathrm A,\mathrm B\}}N_\alpha\ln x_\alpha,
+\qquad x_\alpha=\frac{N_\alpha}{\ntot}.}
+若 \(\mathrm A\)、\(\mathrm B\) 真是同種粒子，交換來源標籤不產生新物理狀態，所以沒有廣延混合熵。位能仍會影響構型、團簇與取樣效率。此結論不涵蓋 \(u_{\mathrm{AA}},u_{\mathrm{AB}},u_{\mathrm{BB}}\) 不同的混合物，也不涵蓋密度或相態改變。二維 \(r^{-3}\) 尾部的遠距積分收斂，符合此處短程體相討論；有限容器仍有邊界修正。
+
+動量必須在理論中考慮，但本次熵差可消去它。當
+\eq{H(\bm p,\bm q)=K(\bm p)+U(\bm q),\qquad
+Z_{p,\mathrm f}=Z_{p,\mathrm i}\ \Longrightarrow\ \Delta S_p=0,}
+各物種粒數固定且初末同溫，動量配分因子前後相同。Monte Carlo 已將動量積分掉，這不等於動量熵不存在。初末不同溫或未熱平衡時，不能直接省略。
+
+\topic{2\quad Einstein 固體的 \(N\) 個原子與 \(N\) 個站點}
+標準 Einstein 固體把每個原子局域在一個可區分的晶格站點，計數對象是各站點的振動激發。因此不應在站點振動配分函數後再除一次 \(N!\)。若從標記原子出發，\(N!\) 個原子對站點的分派會與不可分辨性因子 \(1/N!\) 抵消；相同原子本身仍不可分辨\,[3]。
+\eq{Z=z_{\mathrm{osc}}^{\,3N},\qquad
+\Omega(q,3N)=\binom{q+3N-1}{q}
+=\frac{(q+3N-1)!}{q!\,(3N-1)!}.}
+本題 \(N\) 是原子數，三維共有 \(3N\) 個獨立振子，\(q\) 是激發量子總數。式中的 \(q!\) 來自相同能量量子的計數，不能誤認為原子的 \(N!\)。以上假設無空缺、無粒子交換與擴散，且忽略跨站點的量子交換效應。
+
+\newpage
+% PAGE 4: evidence, limitations, conclusions and attribution.
+\pagetitle{驗證、結論與來源}
+\topic{驗證與範圍}
+驗證分為解析值、取樣規則、可重現性與實際介面操作。解析案例檢查偶極勢的方向及距離尺度；結構檢查粒子數、邊界、硬核約束、總能量與局部能量差；固定種子用於比較與重現。
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt,topsep=3pt,parsep=0pt]
+  \item 物理核心：\PhysicsPass{} / \PhysicsTotal{} 項測試通過，含偶極解析值、能量有限差分、硬核與邊界、能量加總、種子重現及理想粒子的左右均勻機率。
+  \item 實驗紀錄：\ExperimentPass{} / \ExperimentTotal{} 項檢查通過。\(\SameSpecies\) 與 \(\AB\) 配對採用相同種子，構型取樣序列一致，並非兩組獨立樣本。
+  \item 介面操作：Chromium \BrowserPass{} / \BrowserTotal{} 項通過，涵蓋離線操作、控制、匯出、Einstein 計數及桌機、平板與手機版面。
+\end{itemize}
+有限粒數的兩區統計可能偏離 \(\ln2\)，左右比例均衡也不保證更細尺度均勻。強作用可能形成團簇並增加自相關；本文僅呈現已執行參數與樣本，不將有限運行視為收斂證明。
+
+\topic{結論}
+\begin{enumerate}
+  \item 混合熵的基準取決於哪些物理狀態可區分。用顏色追蹤來源，不會讓相同粒子額外獲得熱力學混合熵。
+  \item 交互作用會改變構型與相關性；只有在作用勢不分標籤、同溫同密度等條件下，才能將體相貢獻相消並保留組合混合項。
+  \item 同種氣體的 \(\ntot!\) 修正與 Einstein 固體的站點計數，遵守同一原則：同一物理狀態只算一次。
+\end{enumerate}
+
+\topic{參考範例與製作說明}
+參考助教講義與三份 HTML 的教學架構，主要沿用混合比較與廣延性主題；Langmuir 範例僅作背景參考。網頁改用明確的正則 Metropolis 取樣與 \(r^{-3}\) 偶極勢，將來源指標與熱力學基準分列，並新增可重現實驗與驗證。程式、文字與版面由 OpenAI Codex 協助整理、生成及檢查；實驗數據由本專案程式實際執行產生。本報告以 LaTeX 編排，所有公式均為數學環境原生排版。
+
+\topic{參考資料}
+\smalltext{[1] 陳欣佑，\textit{Gibbs Paradox \& Particle Indistinguishability}，Thermal and Statistical Physics I，2026-10-15，20 頁課程投影片。附範例：\nolinkurl{gibbs_paradox_interaction.html}、\nolinkurl{entropy_extensivity.html}、\nolinkurl{langmuir_adsorption_model.html}。}
+\smalltext{[2] David Tong, \textit{Statistical Physics}, Chapters 1--2，Gibbs entropy、Gibbs paradox 與 interacting gas。\\
+\url{https://www.damtp.cam.ac.uk/user/tong/statphys/statmechhtml/S2.html}}
+\smalltext{[3] Jack Simons, \textit{An Introduction to Theoretical Chemistry}, 2nd ed., Chapter 7, p.\,564，晶體振動配分函數與 \(N!\) 討論。\\
+\url{https://simons.hec.utah.edu/ITCSecondEdition/chapter7.pdf}}
+\end{document}

@@ -3,3 +3,8 @@ node_modules/
 __pycache__/
 *.pyc
 tmp/
+report/latex/*.aux
+report/latex/*.log
+report/latex/*.out
+report/latex/*.xdv
+report/latex/main.pdf

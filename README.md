@@ -44,11 +44,13 @@ node scripts/run_experiments.cjs
 node tests/browser.cjs
 ```
 
-PDF 需 Python、ReportLab、pypdf 以及支援繁體中文的 TrueType 字型。macOS 預設使用 Arial Unicode；其他環境以 `REPORT_CJK_FONT` 指定字型：
+PDF 使用真正 LaTeX 排版，來源為 [`report/latex/main.tex`](report/latex/main.tex)。建置需 Python、pypdf 及 Tectonic；繁體中文優先採用 macOS Songti TC，其他平台使用 Fandol 字型。首次編譯需下載 TeX 套件，之後可用快取離線建置：
 
 ```sh
 python3 scripts/build_report.py
 ```
+
+可用 `--tectonic /path/to/tectonic` 指定引擎，或以 `--only-cached` 禁止下載。圖表與數值由 `results/` 自動產生，不需手動抄寫；編譯後會檢查頁數與文字溢出，再更新交付 PDF。詳細流程見 [`report/README.md`](report/README.md)。
 
 正式數據：理想點粒子、C=0 硬核對照、C=1.5 偶極，各配 A+A/A+B 與種子 17、29、43、71、101，共30次運行。每側24顆、T=1，隔板關閉200 sweeps，撤板後4000 sweeps；每20 sweeps記錄，晚期窗為撤板後3000–4000 sweeps。報告誤差為5個種子晚期均值的樣本標準差，不是標準誤。A+A/A+B 配對的機械序列完全相同，不能當成獨立重複樣本。
 
