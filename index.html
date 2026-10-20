@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="用可重現的粒子取樣探索 Gibbs 悖論、混合熵與不可分辨性。單檔、離線、繁體中文互動實驗。">
+<title>Gibbs 混合實驗室</title>
+<style>:root{--bg:#f4f3ed;--paper:#fffef9;--ink:#173c37;--text:#2f4844;--muted:#62746e;--teal:#006b60;--teal-soft:#e1ede5;--orange:#b84c27;--line:#d2dcd3;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;--serif:Georgia,'Noto Serif TC','Songti TC',serif;--sans:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC',sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 var(--sans)}button,input,select{font:inherit}button,a,input,select,summary{touch-action:manipulation}button{cursor:pointer;min-height:44px;border:1px solid var(--line);border-radius:7px;padding:10px 15px;background:var(--paper);color:var(--ink);font-weight:600;transition:background .15s,border-color .15s}button:hover{background:var(--teal-soft);border-color:var(--teal)}button:disabled{opacity:.5;cursor:not-allowed}a{color:inherit;text-underline-offset:4px}a:hover{color:var(--teal)}:focus-visible{outline:3px solid #cd7c30;outline-offset:3px}h1,h2,h3,p{margin:0}h1{font-size:clamp(28px,3.4vw,46px);line-height:1.35;letter-spacing:-1px;color:var(--ink);font-weight:650}h2{font-size:21px;color:var(--ink)}h3{font-size:17px;color:var(--ink)}small{font-size:12px}input[type=range]{width:100%;accent-color:var(--teal);height:44px;margin:2px 0 0;cursor:pointer}input[type=number],select{min-height:44px;max-width:100%;width:100%;color:var(--ink);border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:8px 10px}input[type=checkbox]{width:18px;height:18px;accent-color:var(--teal)}sub,sup{font-size:.7em}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.skip{position:absolute;top:-100px;left:20px;background:white;padding:12px;z-index:5}.skip:focus{top:8px}.topbar{max-width:1440px;margin:auto;height:88px;padding:0 44px;display:flex;align-items:center;gap:40px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:600 21px/1.15 var(--serif);letter-spacing:2px}.brand svg{width:33px;height:33px;fill:none;stroke:var(--teal);stroke-width:1.6}.brand-sub{display:block;font:11px var(--sans);letter-spacing:2px;margin-top:6px}.topbar nav{display:flex;gap:28px;margin-left:auto;font-size:14px}.topbar nav a{text-decoration:none}.offline{font-size:12px;border-left:1px solid var(--line);padding-left:24px;color:var(--muted)}main{max-width:1440px;margin:auto;padding:0 44px}.intro{display:flex;justify-content:space-between;gap:32px;padding:45px 0 36px;align-items:center}.eyebrow{color:var(--teal);font:600 11px/1.6 var(--mono);letter-spacing:1.3px}.intro .eyebrow{margin-bottom:13px}.lead{margin-top:14px;color:var(--muted);font-size:15px}.intro-formula{border-left:2px solid var(--line);padding:8px 0 8px 25px;flex-shrink:0}.intro-formula>span{font-size:12px;color:var(--muted)}.intro-formula>div{font:26px/1.8 var(--serif);color:var(--teal)}.intro-formula small{color:var(--muted)}.mobile-break{display:none}.section-line{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.section-number{font:16px var(--mono);color:var(--teal);margin-right:12px}.section-line>p{font-size:12px;color:var(--muted)}.scenario-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.scenario{display:flex;align-items:center;gap:12px;text-align:left;padding:16px;border-radius:8px;min-width:0;position:relative}.scenario strong{font-size:14px;display:block}.scenario small{display:block;font:11px var(--mono);color:var(--muted);margin-top:5px}.scenario b{margin-left:auto;font:11px var(--mono);color:var(--muted);align-self:flex-start}.scenario.active{background:var(--teal-soft);border-color:var(--teal);box-shadow:inset 0 -2px 0 var(--teal)}.scenario-mark{display:flex;gap:4px;flex-shrink:0}.scenario-mark i{width:12px;height:12px;background:var(--teal);border-radius:50%;position:relative}.scenario-mark i.b{background:var(--orange)}.magnetic i:after{content:'';position:absolute;left:5px;top:-4px;width:2px;height:12px;background:var(--ink);transform:rotate(35deg);border:1px solid var(--paper)}.lab-grid{display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:20px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px}.panel-head h3{margin-top:3px}.state-badge{white-space:nowrap;padding:4px 10px;background:var(--bg);border:1px solid var(--line);border-radius:20px;font-size:12px}.state-badge.open{color:var(--teal);background:var(--teal-soft);border-color:var(--teal-soft)}.canvas-wrap{position:relative;margin:0 22px;border:1px solid #bdcfc4;border-radius:5px;background:#eff3e9;overflow:hidden}#simulation{width:100%;aspect-ratio:24/14;display:block}.chamber-labels{position:absolute;inset:14px 0 auto;display:flex;justify-content:space-around;pointer-events:none;font:11px var(--sans);letter-spacing:3px;color:#74867b}.sim-meta{display:flex;justify-content:space-between;padding:12px 22px;font-size:12px;color:var(--muted)}.sim-meta strong{font:600 15px var(--mono);color:var(--ink)}.sim-meta>span:first-child{display:flex;align-items:center;gap:7px}.dot{width:9px;height:9px;background:var(--teal);border-radius:50%;display:inline-block}.orange{background:var(--orange)}.transport{padding:4px 22px 16px;display:flex;gap:9px;flex-wrap:wrap}.primary{background:var(--teal);color:white;border-color:var(--teal)}.primary:hover{background:#04564e;color:white}.primary span{margin-left:8px}.secondary{background:var(--paper)}.quiet{background:transparent;border-color:transparent}.quiet:hover{background:var(--bg);border-color:var(--line)}.sim-foot{padding:12px 22px;display:flex;gap:16px;align-items:center;background:#f7f7f1;border-top:1px solid var(--line)}.sim-foot p{font-size:12px;color:var(--muted)}.check{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px;min-height:44px}.status-note{padding:11px 22px;font-size:12px;color:var(--muted);min-height:42px}.controls{padding:0 20px 16px}.controls .panel-head{padding:20px 0 15px}.controls .eyebrow{font-size:9px}.control{padding:12px 0;border-top:1px solid var(--line)}.control label{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:550}.control output{margin-left:auto;color:var(--teal);font:600 15px var(--mono)}.range-ends{display:flex;justify-content:space-between;color:var(--muted);font:10px var(--mono)}.hint{color:var(--muted);font-size:12px;line-height:1.65}.two-fields{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}.two-fields label{margin-bottom:7px}.two-fields input{font-size:12px;font-family:var(--mono)}.wide{width:100%;margin:4px 0 8px}.units{margin-top:13px;border:none!important;border-top:1px solid var(--line)!important;border-radius:0!important;background:none!important}.units summary{font-size:12px;padding:12px 0!important}.units p{font-size:12px;color:var(--muted);padding-bottom:8px}.readout-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0}.readout{border-top:2px solid var(--line);background:var(--paper);padding:18px 20px;border-radius:0 0 8px 8px}.readout.theory{border-color:var(--teal);background:#e6eee6}.readout-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:550}.tag{font-size:10px;white-space:nowrap;font-weight:400;color:var(--muted);padding:1px 6px;border:1px solid #c6d2c8;border-radius:4px}.readout-value{display:flex;align-items:baseline;gap:14px;margin:12px 0}.readout-value strong{font:500 36px/1.15 var(--mono);letter-spacing:-2px;color:var(--ink)}.readout-value>span{font-size:11px;color:var(--muted)}.readout p{font-size:12px;color:var(--muted)}.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.chart-panel{padding-bottom:15px}.chart-panel .panel-head{padding-bottom:6px}.chart-panel>canvas{width:100%;height:200px;display:block}.chart-panel>.hint{padding:0 22px}.chart-key{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}.chart-key i{width:18px;height:2px;background:var(--teal)}.chart-key i.dashed{height:0;border-top:2px dashed #7a897f;background:none;margin-left:7px}.orange-key i{background:var(--orange)}.data-strip{display:grid;grid-template-columns:1.3fr 1fr 1fr;align-items:center;gap:26px;padding:20px 22px;margin-top:20px}.data-strip h3{font-size:15px;margin-bottom:6px}table{border-collapse:collapse;width:100%;font-size:12px;text-align:right}th,td{padding:7px;border-bottom:1px solid var(--line);white-space:nowrap}th{font-weight:500;color:var(--muted)}th:first-child{text-align:left}td{font-family:var(--mono);font-size:14px}.export-actions{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}.export-actions button{font-size:12px;padding:8px 10px}.guide-section{padding:40px 0}.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}.guide-grid article{padding:22px 0 0;border-top:1px solid var(--line)}.guide-num{font:italic 25px var(--serif);color:var(--teal);float:left;margin-right:13px}.guide-grid h3{margin:2px 0 14px}.guide-grid p{color:var(--muted);font-size:14px;line-height:1.85}.principles{padding-bottom:40px}details{border:1px solid var(--line);border-radius:7px;background:var(--paper);margin-top:10px}summary{cursor:pointer;padding:17px 22px;list-style-position:inside;color:var(--ink);font-weight:550;font-size:15px}summary>span{color:var(--teal);font:12px var(--mono);margin:0 12px 0 6px}details[open]>summary{border-bottom:1px solid var(--line)}.detail-content{padding:22px 28px;font-size:14px;line-height:1.9}.detail-content p+p{margin-top:13px}.detail-content h3{margin-bottom:10px}.model-grid,.einstein-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px}.equation{font-family:var(--serif);font-size:17px;line-height:1.8;background:#f0f3eb;border-radius:4px;padding:12px 15px;margin:15px 0;overflow-wrap:anywhere}.callout{border-left:3px solid var(--teal);padding:10px 15px;background:#f0f3eb}.einstein-demo{border:1px solid var(--line);padding:18px;border-radius:6px}.einstein-demo label{display:flex;justify-content:space-between}.count-result{display:flex;justify-content:space-between;padding:15px 0}.count-result strong{font:28px var(--mono);color:var(--teal)}#oscillatorDrawing{display:flex;align-items:end;gap:8px;margin-top:20px;min-height:90px}#oscillatorDrawing>div{flex:1;border-bottom:2px solid var(--teal);text-align:center;padding-bottom:3px;color:var(--muted);font:11px var(--mono)}#oscillatorDrawing i{display:block;height:7px;background:var(--teal);border-radius:2px;margin-bottom:3px}.principles details strong{font-weight:650}footer{border-top:1px solid var(--line);padding:28px 0 35px;display:flex;justify-content:space-between;gap:30px;color:var(--muted);font-size:11px}footer strong{color:var(--ink);font-size:13px}footer>p{text-align:right;max-width:660px}button.busy{opacity:.65}
+@media(min-width:1600px){body{font-size:16px}}
+@media(max-width:1150px){main{padding:0 28px}.topbar{padding:0 28px}.intro-formula{display:none}.lab-grid{grid-template-columns:minmax(0,1fr) 270px}.scenario{padding:13px 10px;gap:8px}.scenario strong{font-size:12px}.scenario b{display:none}.readout-value{display:block}.readout-value>span{display:block;margin-top:6px}.readout-value strong{font-size:32px}.readout-top .tag{display:none}.data-strip{grid-template-columns:1fr 1fr}.export-actions{grid-column:1/-1;justify-content:flex-start}.data-strip{gap:16px}.sim-foot{align-items:flex-start;flex-direction:column;gap:4px}.panel-head{padding:18px}.canvas-wrap{margin:0 18px}}
+@media(max-width:850px){main{padding:0 20px}.topbar{padding:0 20px;height:76px;gap:20px}.offline{display:none}.topbar nav{gap:18px}.intro{padding:30px 0}.lead{font-size:14px}.scenario-tabs{grid-template-columns:repeat(2,1fr)}.scenario strong{font-size:14px}.scenario{padding:13px}.lab-grid{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}.controls>.panel-head{grid-column:1/-1}.controls>.control{padding:12px 0}.controls>.wide{align-self:center}.controls>.hint{align-self:center}.units{grid-column:1/-1}.sim-foot{flex-direction:row;align-items:center;gap:12px}.results-grid{gap:14px}.chart-panel .panel-head{align-items:flex-start;flex-direction:column;gap:6px}.readout-grid{gap:10px}.readout{padding:15px 13px}.readout-value strong{font-size:30px}.readout-top{font-size:11px}.guide-grid{gap:20px}.guide-grid h3{font-size:15px}.guide-num{display:none}.model-grid{grid-template-columns:1fr;gap:20px}.section-line>p{display:none}.data-strip h3{font-size:14px}}
+@media(max-width:560px){body{font-size:14px}main{padding:0 15px}.topbar{padding:0 15px;height:70px}.topbar nav{gap:13px;font-size:12px}.brand{font-size:18px;gap:8px}.brand svg{width:27px}.brand-sub{font-size:9px}.intro{padding:27px 0}.intro .eyebrow{font-size:9px;letter-spacing:.8px}.mobile-break{display:block}.lead{font-size:13px;line-height:1.8}.section-line{margin-bottom:13px}h2{font-size:18px}.scenario-tabs{gap:8px;margin-bottom:14px}.scenario{gap:8px;padding:12px 9px}.scenario strong{font-size:12px}.scenario small{font-size:9px}.scenario-mark{gap:2px}.scenario-mark i{width:9px;height:9px}.scenario .magnetic{margin-top:5px}.panel-head{padding:16px 14px}.panel-head h3{font-size:15px}.panel-head .eyebrow{font-size:9px}.canvas-wrap{margin:0 12px}.chamber-labels{top:7px;font-size:9px}.state-badge{font-size:10px;padding:3px 8px}.sim-meta{padding:9px 14px;font-size:11px}.transport{padding:5px 12px 12px;gap:7px}.transport .primary{width:100%}.transport .secondary,.transport .quiet{flex:1}.sim-foot{padding:9px 12px;flex-direction:column;align-items:flex-start;gap:0}.status-note{padding:9px 12px}.controls{padding:0 15px 12px;gap:0 18px}.two-fields{grid-column:1/-1}.controls>.wide,.controls>.hint{grid-column:1/-1}.readout-grid{grid-template-columns:1fr;gap:9px;margin:14px 0}.readout{display:grid;grid-template-columns:1fr auto;padding:12px 14px;gap:0 12px;border-top-width:1px;border-left:3px solid var(--line)}.readout.theory{border-left-color:var(--teal)}.readout-top{grid-column:1;font-size:12px;align-self:center}.readout-value{grid-column:2;grid-row:1/3;margin:0;text-align:right}.readout-value strong{font-size:25px;letter-spacing:-1px}.readout-value>span{font-size:9px}.readout p{font-size:11px;grid-column:1;margin-top:3px}.results-grid{grid-template-columns:1fr}.chart-panel .panel-head{flex-direction:row;align-items:center}.chart-panel>canvas{height:185px}.chart-key{font-size:9px;gap:4px}.chart-key i{width:12px}.chart-panel>.hint{padding:0 14px;font-size:11px}.data-strip{grid-template-columns:1fr;padding:17px 14px}.data-strip .export-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.export-actions button:first-child{grid-column:1/-1}.data-strip table{font-size:12px}.guide-section{padding:30px 0}.guide-grid{grid-template-columns:1fr;gap:20px}.guide-grid article{padding-top:16px}.guide-grid h3{font-size:16px;margin-bottom:8px}.guide-num{display:block}.guide-grid p{font-size:13px}.detail-content{padding:16px 17px;font-size:13px}.detail-content h3{font-size:15px}.equation{font-size:15px;padding:10px}.einstein-grid{grid-template-columns:1fr;gap:18px}summary{font-size:13px;padding:14px 12px}summary>span{margin:0 7px 0 3px;font-size:10px}.principles{padding-bottom:28px}footer{display:block;padding:23px 0}footer>p{text-align:left;margin-top:12px}.count-result strong{font-size:25px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media print{.topbar,.controls,.transport,.export-actions,.intro-formula{display:none}body{background:white}main{max-width:none;padding:0}.intro{padding-top:0}.lab-grid{display:block}.readout-grid{break-inside:avoid}.principles details{break-inside:avoid}footer{font-size:9px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#experiment">跳至實驗</a>
+<header class="topbar"><a class="brand" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="9" cy="10" r="4"/><circle cx="23" cy="22" r="4"/><path d="M5 24 27 8M16 3v26"/></svg><span>GIBBS<span class="brand-sub">混合實驗室</span></span></a><nav aria-label="頁面導覽"><a href="#experiment">實驗</a><a href="#guide">如何閱讀</a><a href="#principles">物理與問答</a></nav><span class="offline">單檔・離線可用</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">THERMAL & STATISTICAL PHYSICS · WEEK 06</p><h1>隔板移開之後，<br class="mobile-break">熵改變了多少？</h1><p class="lead">比較相同與不同粒子，分清楚看得見的混合，與熱力學中的混合熵。</p></div><div class="intro-formula"><span>等量、可分辨物種的體相基準</span><div>Δ<i>S</i><sub>mix</sub> = <i>N</i><sub>tot</sub><i>k</i><sub>B</sub> ln 2</div><small>同種粒子：Δ<i>S</i><sub>mix</sub> / <i>N</i><sub>tot</sub><i>k</i><sub>B</sub> → 0</small></div></section>
+<section id="experiment" aria-label="混合實驗">
+<div class="section-line"><h2><span class="section-number">01</span> 選一個實驗</h2><p>改變物理參數會建立新的實驗</p></div>
+<div class="scenario-tabs" role="group" aria-label="實驗情境">
+<button data-mode="ideal_AB" class="scenario active" aria-pressed="true"><span class="scenario-mark"><i></i><i class="b"></i></span><span><strong>理想・不同物種</strong><small>A + B</small></span><b>01</b></button>
+<button data-mode="ideal_AA" class="scenario" aria-pressed="false"><span class="scenario-mark"><i></i><i></i></span><span><strong>理想・相同粒子</strong><small>A + A</small></span><b>02</b></button>
+<button data-mode="dipole_AB" class="scenario" aria-pressed="false"><span class="scenario-mark magnetic"><i></i><i class="b"></i></span><span><strong>磁性・不同物種</strong><small>A + B · 偶極作用</small></span><b>03</b></button>
+<button data-mode="dipole_AA" class="scenario" aria-pressed="false"><span class="scenario-mark magnetic"><i></i><i></i></span><span><strong>磁性・相同粒子</strong><small>A + A · 偶極作用</small></span><b>04</b></button>
+</div>
+<label class="sr-only" for="mode">實驗模式</label><select id="mode" class="sr-only" tabindex="-1" aria-hidden="true"><option value="ideal_AB">理想 A+B</option><option value="ideal_AA">理想 A+A</option><option value="dipole_AB">磁性 A+B</option><option value="dipole_AA">磁性 A+A</option></select>
+<div class="lab-grid">
+<div class="apparatus panel"><div class="panel-head"><div><span id="modelLabel" class="eyebrow">IDEAL PARTICLES</span><h3 id="scenarioTitle">不同物種，自由混合</h3></div><span id="stateBadge" class="state-badge">隔板關閉</span></div>
+<div class="canvas-wrap"><canvas id="simulation" aria-label="二維粒子容器，左右兩室由可移除的隔板分開">粒子模擬圖。下方表格提供左右粒子數。</canvas><div class="chamber-labels"><span>左室</span><span>右室</span></div></div>
+<div class="sim-meta"><span id="particleLegend"><i class="dot"></i>A 物種 <i class="dot orange"></i>B 物種</span><span><strong id="sweepValue">0</strong> sweeps</span></div>
+<div class="transport"><button id="openPartition" class="primary">移除隔板，開始混合 <span aria-hidden="true">↗</span></button><button id="run" class="secondary">開始取樣</button><button id="reset" class="quiet">重新準備</button></div>
+<div class="sim-foot"><label class="check"><input type="checkbox" id="showOrigins">顯示來源顏色</label><p id="originHint">A、B 可物理區分，但具有相同的力學參數。</p></div>
+<p id="notice" class="status-note" role="status" aria-live="polite">可先在隔板關閉時取樣，再移除隔板；動畫步數不代表真實時間。</p>
+</div>
+<aside class="controls panel" aria-label="實驗參數"><div class="panel-head"><h3>實驗設定</h3><span class="eyebrow">PARAMETERS</span></div>
+<div class="control"><label for="nPerSide">每側粒子數 <output id="nOutput">24</output></label><input id="nPerSide" type="range" min="8" max="48" step="4" value="24"><div class="range-ends"><span>8</span><span>48</span></div></div>
+<div class="control"><label for="temp">溫度 <i>T</i>* <output id="tempOutput">1.0</output></label><input id="temp" type="range" min="0.5" max="2" step="0.1" value="1"><div class="range-ends"><span>0.5</span><span>2.0</span></div><p class="hint" id="tempHint">理想粒子的位置分布與 T 無關；此取樣不模擬速度。</p></div>
+<div class="control" id="couplingControl"><label for="coupling">偶極係數 <i>C</i>* <output id="couplingOutput">1.5</output></label><input id="coupling" type="range" min="0" max="2" step="0.1" value="1.5"><p class="hint" id="couplingHint">磁性模式啟用；C*=0 仍保留硬核排斥。</p></div>
+<div class="control two-fields"><div><label for="seed">亂數種子</label><input id="seed" type="number" min="0" max="4294967295" step="1" value="20261021" inputmode="numeric"></div><div><label for="speed">播放速度</label><select id="speed"><option value="1">1×</option><option value="4" selected>4×</option><option value="12">12×</option></select></div></div>
+<button id="advance" class="secondary wide">取樣 100 sweeps</button><p class="hint">每 sweep 嘗試更新 N<sub>tot</sub> 次。速度只改變播放，不改變取樣規則。</p>
+<details class="units"><summary>單位與容器</summary><p>盒子固定為 24σ × 14σ；縮放視窗不改變物理尺寸。σ 為磁性粒子直徑，理想粒子視為點。能量尺度 ε 固定，T*=k<sub>B</sub>T/ε，C*=C/(εσ³)。</p></details>
+</aside>
+</div>
+<div class="readout-grid">
+<article class="readout theory"><div class="readout-top"><span>熱力學混合熵・理論基準</span><span class="tag">體相極限</span></div><div class="readout-value"><strong id="thermoValue">0.6931</strong><span>ΔS<sub>mix</sub> / N<sub>tot</sub>k<sub>B</sub></span></div><p id="theoryNote">不同物種：ln 2。此值不是由單次動畫估計。</p></article>
+<article class="readout"><div class="readout-top"><span>來源混合指標 <i>m</i></span><span class="tag">左右計數</span></div><div class="readout-value"><strong id="mixValue">0.0000</strong><span>0 ≤ m ≤ ln 2</span></div><p>記錄最初來自哪一側；不等於完整熱力學熵。</p></article>
+<article class="readout"><div class="readout-top"><span>每粒子平均位能</span><span class="tag">取樣瞬間</span></div><div class="readout-value"><strong id="energyValue">0.0000</strong><span>U / N<sub>tot</sub>k<sub>B</sub>T</span></div><p id="energyNote">理想粒子沒有粒子間位能。</p></article>
+</div>
+<div class="results-grid"><section class="panel chart-panel"><div class="panel-head"><h3>混合的軌跡</h3><span class="chart-key"><i></i>來源指標 m <i class="dashed"></i>ln 2</span></div><canvas id="mixChart" role="img" aria-label="來源混合指標隨取樣步數的曲線"></canvas><p class="hint">左右各半只代表兩區比例均勻，不保證局部混合或已達平衡。</p></section><section class="panel chart-panel"><div class="panel-head"><h3>位能的變化</h3><span class="chart-key orange-key"><i></i>U / N<sub>tot</sub>k<sub>B</sub>T</span></div><canvas id="energyChart" role="img" aria-label="每粒子位能隨取樣步數的曲線"></canvas><p class="hint">熱浴可交換能量；Metropolis 取樣不要求位能守恆。</p></section></div>
+<div class="data-strip panel"><div><h3>每個來源群，現在在哪裡？</h3><p class="hint">A+A 中的來源記錄只用於追蹤，並非新增物種。</p></div><table><caption class="sr-only">依初始來源分組的左右粒子數</caption><thead><tr><th scope="col">初始來源</th><th scope="col">現在左室</th><th scope="col">現在右室</th></tr></thead><tbody><tr><th scope="row">左側來源</th><td id="leftL">24</td><td id="leftR">0</td></tr><tr><th scope="row">右側來源</th><td id="rightL">0</td><td id="rightR">24</td></tr></tbody></table><div class="export-actions"><button id="exportCSV" class="secondary">匯出曲線 CSV</button><button id="exportJSON" class="quiet">儲存狀態 JSON</button><button id="exportPNG" class="quiet">下載容器圖 PNG</button></div></div>
+</section>
+<section id="guide" class="guide-section"><div class="section-line"><h2><span class="section-number">02</span> 三個閱讀重點</h2><p>看見混合，也理解數字的意義</p></div><div class="guide-grid"><article><span class="guide-num">A</span><h3>先比較 A+B 與 A+A</h3><p>在相同參數與種子下，粒子運動相同。改變物種的可分辨性，會改變熱力學計數。A+A 即使左右來源完全混合，也沒有廣延的組合混合熵。</p></article><article><span class="guide-num">B</span><h3>再打開磁性作用</h3><p>箭頭表示偶極方向。頭尾平行偏好吸引，並排平行偏好排斥。改變 C*/T* 會改變構型偏好；取樣路徑不能用來量測真實的混合速率。</p></article><article><span class="guide-num">C</span><h3>保留證據再下結論</h3><p>固定種子可重現結果。先在閉合隔板下取樣，再移除隔板；觀察較長區間、多組種子。用 CSV 保留資料，勿把單次波動解讀成第二定律失效。</p></article></div></section>
+<section id="principles" class="principles"><div class="section-line"><h2><span class="section-number">03</span> 物理模型與作業問答</h2><p>公式、假設與適用範圍</p></div>
+<details open><summary><span>01</span>這個實驗實際算了什麼？</summary><div class="detail-content model-grid"><div><h3>固定溫度的正則取樣</h3><p>對稱地提議粒子位移與轉向，以 P<sub>acc</sub>=min[1, exp(−ΔU/k<sub>B</sub>T)] 接受。越界、跨越未開隔板或硬核重疊直接拒絕。初始隨機配置需經取樣鬆弛。動畫以 sweeps 表示，沒有校準成真實時間。</p><div class="equation">U<sub>ij</sub> = C/r³ [cos(θ<sub>i</sub>−θ<sub>j</sub>) − 3cos(θ<sub>i</sub>−φ)cos(θ<sub>j</sub>−φ)]</div><p>φ 是兩粒子連線方位角。磁性模式在 r&lt;σ 時 U=∞；所有粒子對都計算，無截斷。隔板阻擋粒子，但不屏蔽偶極作用。理想模式的點粒子 U=0。</p></div><div><h3>三種讀值，三種意義</h3><div class="equation">ΔS<sub>mix</sub> = −k<sub>B</sub> ∑<sub>α</sub> N<sub>α</sub> ln x<sub>α</sub></div><p>適用於等溫、初始同數密度、作用勢不依物種而變的均勻體相。兩種等量物種 x<sub>A</sub>=x<sub>B</sub>=1/2；同種粒子無此組合項。</p><div class="equation">m = ∑<sub>g=L₀,R₀</sub> (N<sub>g</sub>/N<sub>tot</sub>) h(n<sub>g,L</sub>/N<sub>g</sub>)</div><p>h(p)=−p ln p−(1−p)ln(1−p)，0 ln 0=0。m 是來源群的左右分布指標，忽略位置、方向及粒子間相關性；U 則是當前所有粒子對的位能和。</p></div></div></details>
+<details><summary><span>02</span>短程作用的位能會影響混合熵嗎？動量呢？</summary><div class="detail-content"><p><strong>位能一般會影響構型熵。</strong>本例 A、B 的作用完全相同，且比較等溫、等密度的均勻體相，因此前後相同的體相交互作用貢獻相消，留下組合混合項。短程這個條件本身不足以保證相消；若 u<sub>AA</sub>、u<sub>AB</sub>、u<sub>BB</sub> 不同，或結構、密度、相態改變，就不能直接套用。</p><p>對 H=K(p)+U(q)，配分函數的動量積分可分離；前後 T、各物種粒數與質量不變時，其熵差為零。這是動量項相消，並非動量不存在。</p><p class="callout">本頁的 0 與 ln 2 是熱力學極限基準。有限粒子數、容器邊界及撤去硬核隔板後可達面積的改變，均可帶來額外修正。二維的 r⁻³ 遠距尾部可積分；三維情形不能直接照搬此短程判準。</p></div></details>
+<details><summary><span>03</span>Einstein 固體需要再除以 N! 嗎？</summary><div class="detail-content einstein-grid"><div><p>相同原子仍不可分辨；標準 Einstein 模型已以<strong>可區分的晶格站點振動態</strong>計數，一個站點局域一個原子，不再額外除以 N!。若先把有標記的原子分配至站點，N! 種分派會與 Gibbs 因子 1/N! 抵消。</p><div class="equation">Ω(q,M) = (q+M−1)! / [q!(M−1)!]</div><p>一維 N 個站點對應 M=N 個振子；三維 N 個原子對應 M=3N。不可把原子數和振子數混為一談。</p></div><div class="einstein-demo"><h3>能量量子分配小實驗</h3><label for="oscillators">振子數 M <output id="oscOutput">4</output></label><input id="oscillators" type="range" min="2" max="8" value="4"><label for="quanta">總量子數 q <output id="qOutput">4</output></label><input id="quanta" type="range" min="0" max="12" value="4"><div class="count-result">可用分配數 <strong id="omegaValue">35</strong></div><p class="hint">每格代表一個振子，而不是一個可交換的能量量子。</p><div id="oscillatorDrawing" aria-label="一種能量分配示意"></div></div></div></details>
+<details><summary><span>04</span>為什麼需要 1/N!？</summary><div class="detail-content"><p>理想氣體若把同種粒子的置換重複計入，Z∝V<sup>N</sup>；同時放大 N 與 V 時，多出 N ln N 類型的非廣延項。加入 1/N! 後，用 Stirling 近似可得到 S∝N ln(V/N)+N×常數，恢復熱力學極限的廣延性。</p><p>有限 N 時保留精確階乘會有次廣延修正；因此「同種混合熵為零」指沒有與 N 成正比的組合混合項，不表示每一個有限系統撤板過程都嚴格零熵變。</p></div></details>
+</section>
+<footer><div><strong>GIBBS 混合實驗室</strong><p>課程互動實驗 · 繁體中文 · 無外部程式依賴</p></div><p>參考助教《Gibbs Paradox & Particle Indistinguishability》（2026/10/15）及所附示範。<br>模型、介面與驗證重新實作；AI 協作與方法限制詳列於附交 PDF。</p></footer>
+</main><script>/*
+ * Canonical Metropolis sampling for a two-dimensional Gibbs mixing experiment.
+ * One sweep is N attempted moves, NOT a physical time interval. This is neither
+ * inertial molecular dynamics nor Brownian dynamics. Species/origin labels never
+ * enter the Hamiltonian or the acceptance probability.
+ *
+ * Reduced units: k_B = 1, dipolar hard-core diameter = 1, box = 24 x 14.
+ * Ideal particles are points, with U = 0. Dipoles are planar unit directions with
+ * U_ij = C / r^3 [u_i.u_j - 3 (u_i.rhat)(u_j.rhat)], outside the hard core.
+ * All pairs are included. There is NO cutoff: in 2D, the r^-3 tail is integrable.
+ * A nonmagnetic partition prevents crossing but does not screen dipole energy.
+ */
+(function attachPhysics(root) {
+  'use strict';
+
+  const BOX_WIDTH = 24;
+  const BOX_HEIGHT = 14;
+  const TWO_PI = 2 * Math.PI;
+  const MODES = ['ideal_AA', 'ideal_AB', 'dipole_AA', 'dipole_AB'];
+
+  class SeededRNG {
+    constructor(seed = 2026) {
+      const text = String(seed);
+      let hash = 2166136261;
+      for (let i = 0; i < text.length; i++) {
+        hash = Math.imul(hash ^ text.charCodeAt(i), 16777619);
+      }
+      this.state = hash >>> 0;
+    }
+    next() {
+      let value = this.state = (this.state + 0x6D2B79F5) >>> 0;
+      value = Math.imul(value ^ (value >>> 15), value | 1);
+      value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    }
+  }
+
+  function binaryEntropy(p) {
+    if (!Number.isFinite(p) || p < 0 || p > 1) throw new RangeError('p must be in [0, 1].');
+    return p === 0 || p === 1 ? 0 : -p * Math.log(p) - (1 - p) * Math.log1p(-p);
+  }
+
+  function pairEnergy(a, b, coupling = 1, sigma = 1) {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const r2 = dx * dx + dy * dy;
+    if (r2 < sigma * sigma) return Infinity;
+    if (coupling === 0) return 0;
+    if (r2 === 0) return Infinity;
+    const r = Math.sqrt(r2);
+    const ax = Math.cos(a.theta), ay = Math.sin(a.theta);
+    const bx = Math.cos(b.theta), by = Math.sin(b.theta);
+    const ar = (ax * dx + ay * dy) / r;
+    const br = (bx * dx + by * dy) / r;
+    return coupling * (ax * bx + ay * by - 3 * ar * br) / (r2 * r);
+  }
+
+  // Smooth dipole derivatives only, valid outside contact. The hard-core force
+  // is not represented by a finite force; Metropolis rejects overlaps instead.
+  // fx,fy are the force on a; the force on b is its negative.
+  function pairForceTorque(a, b, coupling = 1) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const r2 = dx * dx + dy * dy;
+    if (r2 === 0) throw new RangeError('Dipole derivatives are undefined at r = 0.');
+    const r = Math.sqrt(r2), rx = dx / r, ry = dy / r;
+    const ax = Math.cos(a.theta), ay = Math.sin(a.theta);
+    const bx = Math.cos(b.theta), by = Math.sin(b.theta);
+    const dot = ax * bx + ay * by;
+    const ar = ax * rx + ay * ry, br = bx * rx + by * ry;
+    const factor = -3 * coupling / (r2 * r2);
+    const energyFactor = coupling / (r2 * r);
+    return {
+      fx: factor * ((dot - 5 * ar * br) * rx + ar * bx + br * ax),
+      fy: factor * ((dot - 5 * ar * br) * ry + ar * by + br * ay),
+      torqueA: energyFactor * (-(ax * by - ay * bx) + 3 * (ax * ry - ay * rx) * br),
+      torqueB: energyFactor * (-(bx * ay - by * ax) + 3 * (bx * ry - by * rx) * ar)
+    };
+  }
+
+  class Simulation {
+    constructor(config = {}) {
+      this.reset(config);
+    }
+
+    reset(overrides = {}) {
+      const config = Object.assign({
+        mode: 'ideal_AB', nPerSide: 24, temp: 1, coupling: 1.5,
+        seed: 2026, stepSize: 1, angleStep: 0.6
+      }, this.config || {}, overrides);
+      if (!MODES.includes(config.mode)) throw new RangeError('Unknown simulation mode.');
+      if (!Number.isInteger(config.nPerSide) || config.nPerSide < 1 || config.nPerSide > 120) {
+        throw new RangeError('nPerSide must be an integer from 1 to 120.');
+      }
+      for (const key of ['temp', 'stepSize', 'angleStep']) {
+        if (!Number.isFinite(config[key]) || config[key] <= 0) throw new RangeError(`${key} must be positive.`);
+      }
+      if (!Number.isFinite(config.coupling) || config.coupling < 0) throw new RangeError('coupling must be nonnegative.');
+      this.config = config;
+      this.width = BOX_WIDTH;
+      this.height = BOX_HEIGHT;
+      this.isDipole = config.mode.startsWith('dipole');
+      this.isDistinct = config.mode.endsWith('AB');
+      this.radius = this.isDipole ? 0.5 : 0;
+      this.rng = new SeededRNG(config.seed);
+      this.partitionOpen = false;
+      this.sweeps = 0;
+      this.attempts = 0;
+      this.accepted = 0;
+      this.particles = [];
+      this._initialize();
+      this.energy = this.totalEnergy();
+      return this;
+    }
+
+    _initialize() {
+      const r = this.radius, half = this.width / 2;
+      for (let origin = 0; origin < 2; origin++) {
+        const minX = origin === 0 ? r : half + r;
+        const maxX = origin === 0 ? half - r : this.width - r;
+        for (let k = 0; k < this.config.nPerSide; k++) {
+          let placed = false;
+          for (let attempt = 0; attempt < 200000; attempt++) {
+            const particle = {
+              x: minX + (maxX - minX) * this.rng.next(),
+              y: r + (this.height - 2 * r) * this.rng.next(),
+              theta: TWO_PI * this.rng.next(), origin,
+              species: this.isDistinct ? origin : 0
+            };
+            if (!this.isDipole || this.particles.every(other =>
+              (particle.x - other.x) ** 2 + (particle.y - other.y) ** 2 >= 1)) {
+              this.particles.push(particle);
+              placed = true;
+              break;
+            }
+          }
+          if (!placed) throw new Error('Could not place hard disks without overlap; reduce particle count.');
+        }
+      }
+      // Rejection placement avoids overlap; it is not an equilibrium sample.
+      // Use closed-partition burn-in before collecting equilibrium comparisons.
+    }
+
+    setPartition(open = true) {
+      if (typeof open !== 'boolean') throw new TypeError('Partition state must be boolean.');
+      if (!open && this.partitionOpen) {
+        throw new Error('Use reset() to prepare separated gases again. Inserting a partition does not unmix them.');
+      }
+      this.partitionOpen = open;
+      return this;
+    }
+
+    _insideWalls(proposal, current) {
+      const r = this.radius, half = this.width / 2;
+      if (proposal.x < r || proposal.x > this.width - r || proposal.y < r || proposal.y > this.height - r) return false;
+      if (!this.partitionOpen) {
+        // Check the current chamber, not just the final overlap with the wall:
+        // even proposals long enough to jump entirely over the wall are rejected.
+        if (current.x < half && proposal.x >= half - r) return false;
+        if (current.x >= half && proposal.x <= half + r) return false;
+      }
+      return true;
+    }
+
+    _localEnergy(proposal, index) {
+      if (!this.isDipole) return 0;
+      let sum = 0;
+      for (let j = 0; j < this.particles.length; j++) {
+        if (j === index) continue;
+        const energy = pairEnergy(proposal, this.particles[j], this.config.coupling);
+        if (!Number.isFinite(energy)) return Infinity;
+        sum += energy;
+      }
+      return sum;
+    }
+
+    totalEnergy() {
+      if (!this.isDipole) return 0;
+      let sum = 0;
+      for (let i = 0; i < this.particles.length; i++) {
+        for (let j = i + 1; j < this.particles.length; j++) {
+          sum += pairEnergy(this.particles[i], this.particles[j], this.config.coupling);
+        }
+      }
+      return sum;
+    }
+
+    sweep(count = 1) {
+      if (!Number.isInteger(count) || count < 0) throw new RangeError('Sweep count must be a nonnegative integer.');
+      const total = this.particles.length;
+      const {stepSize, angleStep, temp} = this.config;
+      for (let s = 0; s < count; s++) {
+        for (let trial = 0; trial < total; trial++) {
+          const index = Math.floor(this.rng.next() * total);
+          const current = this.particles[index];
+          const proposal = {
+            x: current.x + (2 * this.rng.next() - 1) * stepSize,
+            y: current.y + (2 * this.rng.next() - 1) * stepSize,
+            theta: (current.theta + (2 * this.rng.next() - 1) * angleStep + TWO_PI) % TWO_PI,
+            origin: current.origin, species: current.species
+          };
+          this.attempts++;
+          if (!this._insideWalls(proposal, current)) continue;
+          const proposedEnergy = this._localEnergy(proposal, index);
+          if (!Number.isFinite(proposedEnergy)) continue;
+          const deltaEnergy = proposedEnergy - this._localEnergy(current, index);
+          // Symmetric proposals + Metropolis acceptance satisfy detailed balance
+          // for exp(-U/T) within the allowed hard-wall/hard-core configuration set.
+          if (deltaEnergy <= 0 || this.rng.next() < Math.exp(-deltaEnergy / temp)) {
+            this.particles[index] = proposal;
+            this.energy += deltaEnergy;
+            this.accepted++;
+          }
+        }
+        this.sweeps++;
+      }
+      return this;
+    }
+
+    metrics() {
+      const half = this.width / 2;
+      let nAL = 0, nAR = 0, nBL = 0, nBR = 0, originLeftL = 0, originRightL = 0;
+      for (const p of this.particles) {
+        const left = p.x < half;
+        if (p.species === 0) { if (left) nAL++; else nAR++; }
+        else { if (left) nBL++; else nBR++; }
+        if (left) { if (p.origin === 0) originLeftL++; else originRightL++; }
+      }
+      const n = this.config.nPerSide, totalN = this.particles.length;
+      // This origin-tracer Shannon statistic is a coarse mixing diagnostic,
+      // including for A+A. It is NOT a measurement of thermodynamic entropy.
+      const mixingPerParticle = (binaryEntropy(originLeftL / n) + binaryEntropy(originRightL / n)) / 2;
+      return {
+        sweeps: this.sweeps, totalN, nAL, nAR, nBL, nBR,
+        originLeftL, originRightL, mixingPerParticle,
+        // Bulk thermodynamic-limit reference for equal initial density and T.
+        // Hard-wall/finite-size changes and correlations are not measured by it.
+        thermoMixTotal: this.isDistinct ? totalN * Math.LN2 : 0,
+        energy: this.energy, energyPerParticle: this.energy / totalN,
+        acceptance: this.attempts ? this.accepted / this.attempts : 0,
+        partitionOpen: this.partitionOpen
+      };
+    }
+
+    snapshot() {
+      return {
+        config: Object.assign({}, this.config), width: this.width, height: this.height,
+        particles: this.particles.map(p => Object.assign({}, p)),
+        metrics: this.metrics(), rngState: this.rng.state
+      };
+    }
+  }
+
+  const api = {Simulation, pairEnergy, pairForceTorque, binaryEntropy, SeededRNG, BOX_WIDTH, BOX_HEIGHT};
+  root.GibbsPhysics = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+</script><script>/* UI controller. All physics lives in GibbsPhysics; canvas pixels never set box size. */
+(() => {
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const {Simulation,binaryEntropy}=GibbsPhysics;
+ const colors={teal:'#006b60',orange:'#b84c27',ink:'#173c37',muted:'#62746e',line:'#d2dcd3'};
+ const modes={ideal_AB:['IDEAL PARTICLES','不同物種，自由混合'],ideal_AA:['IDEAL PARTICLES','相同粒子，相同體相'],dipole_AB:['DIPOLAR HARD DISKS','不同物種，相同偶極作用'],dipole_AA:['DIPOLAR HARD DISKS','相同磁珠，交換不增計數']};
+ let sim,history=[],running=false,busy=false,openSweep=null,task=0;
+ function configFromInputs(){return {mode:$('mode').value,nPerSide:Number($('nPerSide').value),temp:Number($('temp').value),coupling:Number($('coupling').value),seed:Number($('seed').value)};}
+ function validSeed(){let seed=Number($('seed').value);if(!Number.isFinite(seed)||$('seed').value==='')seed=20261021;seed=Math.min(4294967295,Math.max(0,Math.floor(seed)));$('seed').value=String(seed);}
+ function notice(text){$('notice').textContent=text;}
+ function record(){const m=sim.metrics();const row={...m,energyOverNkT:m.energyPerParticle/sim.config.temp};if(history.length&&history.at(-1).sweeps===m.sweeps)history[history.length-1]=row;else history.push(row);}
+ function setBusy(value){busy=value;['advance','run','openPartition'].forEach(id=>$(id).disabled=value||(id==='openPartition'&&sim.partitionOpen));$('advance').textContent=value?'取樣中…':'取樣 100 sweeps';}
+ function reset(config){task++;running=false;busy=false;if(config){for(const key of ['mode','nPerSide','temp','coupling','seed'])if(config[key]!==undefined)$(key).value=config[key];}validSeed();sim=new Simulation(configFromInputs());history=[];openSweep=null;$('showOrigins').checked=false;record();setBusy(false);syncMode();update();drawAll();notice('新實驗已準備。可先在隔板關閉時取樣，再移除隔板。');return sim;}
+ function setMode(mode){if(!modes[mode])throw Error('Unknown mode');$('mode').value=mode;reset();}
+ function finiteNExpectation(n){let weight=2**(-n),sum=0;for(let k=0;k<=n;k++){sum+=weight*binaryEntropy(k/n);if(k<n)weight*=((n-k)/(k+1));}return sum;}
+ function syncMode(){const isD=sim.isDipole,isAB=sim.isDistinct;document.querySelectorAll('[data-mode]').forEach(b=>{const active=b.dataset.mode===sim.config.mode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});$('modelLabel').textContent=modes[sim.config.mode][0];$('scenarioTitle').textContent=modes[sim.config.mode][1];$('tempHint').textContent=isD?'T* 越高，較高能量的提案越容易被接受。':'理想粒子的位置分布與 T 無關；此取樣不模擬速度。';$('coupling').disabled=!isD;$('couplingControl').style.opacity=isD?'1':'.65';$('couplingHint').textContent=isD?'C*=0 仍保留硬核排斥。':'理想模式沒有粒子間作用。';$('nOutput').textContent=sim.config.nPerSide;$('tempOutput').textContent=sim.config.temp.toFixed(1);$('couplingOutput').textContent=sim.config.coupling.toFixed(1);$('showOrigins').disabled=isAB;$('originHint').textContent=isAB?'A、B 可物理區分，但具有相同的力學參數。':'來源顏色僅追蹤初始位置；顯示顏色不會改變物種與物理。';$('theoryNote').textContent=isAB?'不同物種：ln 2。此值不是由單次動畫估計。':'同種粒子：0。沒有與粒子數成正比的組合混合熵。';$('energyNote').textContent=isD?'全粒子對的偶極位能；不含熱浴與動能。':'理想粒子沒有粒子間位能。';const idealNote=!isD?`理想粒子充分混合時，有限樣本期望約 ${finiteNExpectation(sim.config.nPerSide).toFixed(4)}，低於 ln 2。`:'左右比例均勻不保證局部混合、構型鬆弛或已達平衡。';$('mixChart').nextElementSibling.textContent=idealNote;syncLegend();}
+ function syncLegend(){const distinct=sim.isDistinct,origin=$('showOrigins').checked;$('particleLegend').innerHTML=distinct?'<i class="dot"></i>A 物種 <i class="dot orange"></i>B 物種':origin?'<i class="dot"></i>左側來源 <i class="dot orange"></i>右側來源':'<i class="dot"></i>同種粒子 A';}
+ function update(){const m=sim.metrics();$('thermoValue').textContent=(m.thermoMixTotal/m.totalN).toFixed(4);$('mixValue').textContent=m.mixingPerParticle.toFixed(4);const e=m.energyPerParticle/sim.config.temp;$('energyValue').textContent=(Math.abs(e)<0.00005?0:e).toFixed(4);$('sweepValue').textContent=m.sweeps.toLocaleString('en-US');$('leftL').textContent=m.originLeftL;$('leftR').textContent=sim.config.nPerSide-m.originLeftL;$('rightL').textContent=m.originRightL;$('rightR').textContent=sim.config.nPerSide-m.originRightL;$('stateBadge').textContent=m.partitionOpen?'隔板已移除':'隔板關閉';$('stateBadge').classList.toggle('open',m.partitionOpen);$('openPartition').disabled=busy||m.partitionOpen;$('run').textContent=running?'暫停取樣':'開始取樣';}
+ function step(n=1){for(let i=0;i<n;i++){sim.sweep();if(sim.sweeps%5===0)record();}record();update();drawAll();return sim.metrics();}
+ function openPartition(){if(busy||sim.partitionOpen)return;sim.setPartition(true);openSweep=sim.sweeps;record();running=true;notice('隔板已移除。來源指標可上升與波動；曲線並非完整熱力學熵。');update();drawAll();}
+ async function advance(){if(busy)return;running=false;const myTask=++task;setBusy(true);notice('正在取樣 100 sweeps…');for(let i=0;i<10;i++){if(task!==myTask)return;step(10);await new Promise(requestAnimationFrame);}if(task!==myTask)return;setBusy(false);notice('已完成 100 sweeps，取樣暫停。可繼續觀察或匯出數據。');update();}
+ function setupCanvas(canvas){const rect=canvas.getBoundingClientRect();const dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.max(1,rect.width),h=Math.max(1,rect.height);const bw=Math.round(w*dpr),bh=Math.round(h*dpr);if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh;}const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);return {c,w,h};}
+ function drawScene(){const {c,w,h}=setupCanvas($('simulation'));const scale=w/sim.width;c.clearRect(0,0,w,h);c.fillStyle='#eff3e9';c.fillRect(0,0,w,h);c.fillStyle='#d5e0d4';for(let x=1;x<sim.width;x+=2)for(let y=1;y<sim.height;y+=2){c.beginPath();c.arc(x*scale,y*scale,.8,0,Math.PI*2);c.fill();}if(!sim.partitionOpen){c.fillStyle='#8b9f92';c.fillRect(w/2-2,0,4,h);c.fillStyle='#f9fcf4';c.fillRect(w/2-.6,0,1.2,h);}else{c.strokeStyle='#bccbc0';c.setLineDash([4,7]);c.beginPath();c.moveTo(w/2,0);c.lineTo(w/2,h);c.stroke();c.setLineDash([]);}for(const p of sim.particles){const x=p.x*scale,y=p.y*scale;const b=sim.isDistinct?p.species===1:($('showOrigins').checked&&p.origin===1);const color=b?colors.orange:colors.teal;const r=sim.isDipole?scale*.5:Math.max(2.8,scale*.19);c.fillStyle=color;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.strokeStyle='#fffdf5';c.lineWidth=1;c.stroke();if(b&&!sim.isDipole){c.fillStyle='#fffdf5';c.beginPath();c.arc(x,y,Math.max(1,r*.3),0,Math.PI*2);c.fill();}if(sim.isDipole){const len=r*.9,dx=Math.cos(p.theta),dy=Math.sin(p.theta);c.strokeStyle='#fffdf5';c.lineWidth=Math.max(1,r*.13);c.beginPath();c.moveTo(x-dx*len*.65,y-dy*len*.65);c.lineTo(x+dx*len,y+dy*len);c.lineTo(x+dx*len*.5-dy*len*.42,y+dy*len*.5+dx*len*.42);c.moveTo(x+dx*len,y+dy*len);c.lineTo(x+dx*len*.5+dy*len*.42,y+dy*len*.5-dx*len*.42);c.stroke();}}}
+ function drawChart(id,key,color){const {c,w,h}=setupCanvas($(id));c.clearRect(0,0,w,h);const pad={l:49,r:19,t:22,b:35};const pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;const maxX=Math.max(100,sim.sweeps);let minY=0,maxY=.74;const data=history;
+ if(key==='energyOverNkT'){minY=0;maxY=0;for(const v of data){minY=Math.min(minY,v[key]);maxY=Math.max(maxY,v[key]);}if(maxY-minY<.1){minY-=.1;maxY+=.1;}else{const p=(maxY-minY)*.15;minY-=p;maxY+=p;}}
+ const X=x=>pad.l+pw*x/maxX,Y=y=>pad.t+ph*(maxY-y)/(maxY-minY);c.font='10px ui-monospace, monospace';c.textAlign='right';c.fillStyle=colors.muted;c.lineWidth=1;for(let k=0;k<=3;k++){const y=minY+(maxY-minY)*k/3,py=Y(y);c.strokeStyle='#e1e6de';c.beginPath();c.moveTo(pad.l,py);c.lineTo(w-pad.r,py);c.stroke();c.fillText(y.toFixed(2),pad.l-8,py+3);}c.textAlign='center';for(let k=0;k<=4;k++){const x=maxX*k/4;c.fillText(Math.round(x).toLocaleString('en-US'),X(x),h-18);}c.textAlign='right';c.font='10px -apple-system,sans-serif';c.fillText('取樣步數 / sweeps',w-pad.r,h-3);c.textAlign='left';c.fillText(key==='mixingPerParticle'?'m':'U / (N kBT)',pad.l,12);
+ if(key==='mixingPerParticle'){c.strokeStyle='#8a9a8f';c.setLineDash([5,4]);c.beginPath();c.moveTo(X(0),Y(Math.LN2));c.lineTo(X(maxX),Y(Math.LN2));c.stroke();c.setLineDash([]);if(!sim.isDipole){c.strokeStyle='#c6cfc4';c.setLineDash([2,4]);const expected=finiteNExpectation(sim.config.nPerSide);c.beginPath();c.moveTo(X(0),Y(expected));c.lineTo(X(maxX),Y(expected));c.stroke();c.setLineDash([]);}}
+ if(openSweep!==null){c.strokeStyle='#a9b7ac';c.setLineDash([2,4]);c.beginPath();c.moveTo(X(openSweep),pad.t);c.lineTo(X(openSweep),pad.t+ph);c.stroke();c.setLineDash([]);c.fillStyle=colors.muted;c.fillText('撤板',Math.min(X(openSweep)+5,w-44),pad.t+12);}
+ const stride=Math.max(1,Math.floor(data.length/Math.max(1,pw)));c.strokeStyle=color;c.lineWidth=1.7;c.beginPath();data.forEach((row,i)=>{if(i%stride!==0&&i!==data.length-1)return;const x=X(row.sweeps),y=Y(row[key]);if(i===0)c.moveTo(x,y);else c.lineTo(x,y);});c.stroke();if(data.length){const last=data.at(-1);c.fillStyle=color;c.beginPath();c.arc(X(last.sweeps),Y(last[key]),3,0,Math.PI*2);c.fill();}}
+ function drawAll(){if(!sim)return;drawScene();drawChart('mixChart','mixingPerParticle',colors.teal);drawChart('energyChart','energyOverNkT',colors.orange);}
+ function download(name,blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('已下載 '+name+'。');}
+ function exportCSV(){record();const keys=['sweeps','partitionOpen','originLeftL','originRightL','mixingPerParticle','thermoMixTotal','energy','energyPerParticle','energyOverNkT','acceptance'];const cfg=sim.config;const meta=['mode','nPerSide','temp','coupling','seed'];const rows=[meta.concat(keys).join(',')];for(const row of history)rows.push(meta.map(k=>cfg[k]).concat(keys.map(k=>row[k])).join(','));download(`gibbs-${cfg.mode}-${cfg.seed}.csv`,new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8'}));}
+ function exportJSON(){record();download(`gibbs-${sim.config.mode}-${sim.config.seed}.json`,new Blob([JSON.stringify({schemaVersion:1,method:'canonical Metropolis; sweeps are not physical time',entropyNote:'thermoMixTotal is bulk reference; mixingPerParticle is origin histogram diagnostic',openSweep,state:sim.snapshot(),history},null,2)],{type:'application/json'}));}
+ function exportPNG(){drawScene();$('simulation').toBlob(blob=>{if(blob)download(`gibbs-${sim.config.mode}-${sim.sweeps}.png`,blob);else notice('圖像下載失敗，請重新嘗試。');});}
+ function updateEinstein(){const M=Number($('oscillators').value),q=Number($('quanta').value);$('oscOutput').textContent=M;$('qOutput').textContent=q;let omega=1;for(let i=1;i<=q;i++)omega=omega*(M+i-1)/i;$('omegaValue').textContent=Math.round(omega).toLocaleString('en-US');const counts=Array(M).fill(0);for(let j=0;j<q;j++)counts[j%M]++;$('oscillatorDrawing').innerHTML=counts.map((n,i)=>`<div aria-label="振子${i+1}有${n}個量子">${'<i></i>'.repeat(n)}${i+1}</div>`).join('');}
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+ for(const id of ['mode','nPerSide','temp','coupling','seed'])$(id).addEventListener('change',()=>reset());
+ for(const [id,out]of [['nPerSide','nOutput'],['temp','tempOutput'],['coupling','couplingOutput']])$(id).addEventListener('input',()=>{$(out).textContent=id==='nPerSide'?$(id).value:Number($(id).value).toFixed(1);});
+ $('reset').addEventListener('click',()=>reset());$('run').addEventListener('click',()=>{if(busy)return;running=!running;notice(running?(sim.partitionOpen?'混合取樣中。':'隔板關閉，正在讓初始構型鬆弛。'):'取樣已暫停。');update();});$('openPartition').addEventListener('click',openPartition);$('advance').addEventListener('click',advance);$('showOrigins').addEventListener('change',()=>{syncLegend();drawScene();});$('exportCSV').addEventListener('click',exportCSV);$('exportJSON').addEventListener('click',exportJSON);$('exportPNG').addEventListener('click',exportPNG);$('oscillators').addEventListener('input',updateEinstein);$('quanta').addEventListener('input',updateEinstein);
+ const ro=new ResizeObserver(drawAll);['simulation','mixChart','energyChart'].forEach(id=>ro.observe($(id)));document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){running=false;update();notice('頁面切至背景，已自動暫停取樣。');}});
+ window.GibbsLab={get simulation(){return sim;},get history(){return history;},get running(){return running;},step,reset,setMode,openPartition,finiteNExpectation};
+ reset();updateEinstein();let last=0;function frame(t){if(running&&!busy&&t-last>=32){step(Number($('speed').value));last=t;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+})();
+</script>
+</body></html>

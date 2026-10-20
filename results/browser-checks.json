@@ -1,0 +1,277 @@
+{
+  "generatedAt": "2026-10-20T19:32:16.345Z",
+  "browser": "Chromium",
+  "offline": true,
+  "reducedMotion": "reduce",
+  "passed": 53,
+  "total": 53,
+  "checks": [
+    {
+      "name": "starts paused with closed partition",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AA: mode change resets to paused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AA: removing wall runs simulation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AA: pause stops sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AA: finite physics metrics",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AA: reset closes wall and clears sweeps",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AB: mode change resets to paused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AB: removing wall runs simulation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AB: pause stops sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AB: finite physics metrics",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ideal_AB: reset closes wall and clears sweeps",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AA: mode change resets to paused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AA: removing wall runs simulation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AA: pause stops sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AA: finite physics metrics",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AA: reset closes wall and clears sweeps",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AB: mode change resets to paused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AB: removing wall runs simulation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AB: pause stops sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AB: finite physics metrics",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dipole_AB: reset closes wall and clears sweeps",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "seed reproduces particle coordinates",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "nPerSide: parameter change resets sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "nPerSide: parameter reaches physics model",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "temp: parameter change resets sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "temp: parameter reaches physics model",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "coupling: parameter change resets sampling",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "coupling: parameter reaches physics model",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "advance performs 100 sweeps and pauses",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".csv: export download offered",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".csv: export has content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".json: export download offered",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".json: export has content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON export parses",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".png: export download offered",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": ".png: export has content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "PNG export signature",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "AA origin color toggle leaves physical state unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Einstein default M=4 q=4 has 35 allocations",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Einstein M=8 q=12 has 50388 allocations",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Einstein q=0 has one allocation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px: no horizontal overflow",
+      "passed": true,
+      "detail": "{\"viewport\":1440,\"document\":1440,\"body\":1440,\"canvases\":[{\"width\":992,\"height\":578.65625},{\"width\":664,\"height\":200},{\"width\":664,\"height\":200}]}"
+    },
+    {
+      "name": "1440px: canvases remain visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px: expanded explanations have no overflow",
+      "passed": true,
+      "detail": "{\"document\":1440,\"body\":1440}"
+    },
+    {
+      "name": "768px: no horizontal overflow",
+      "passed": true,
+      "detail": "{\"viewport\":768,\"document\":768,\"body\":768,\"canvases\":[{\"width\":688,\"height\":401.328125},{\"width\":355,\"height\":200},{\"width\":355,\"height\":200}]}"
+    },
+    {
+      "name": "768px: canvases remain visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "768px: expanded explanations have no overflow",
+      "passed": true,
+      "detail": "{\"document\":768,\"body\":768}"
+    },
+    {
+      "name": "375px: no horizontal overflow",
+      "passed": true,
+      "detail": "{\"viewport\":375,\"document\":375,\"body\":375,\"canvases\":[{\"width\":317,\"height\":184.90625},{\"width\":343,\"height\":185},{\"width\":343,\"height\":185}]}"
+    },
+    {
+      "name": "375px: canvases remain visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "375px: expanded explanations have no overflow",
+      "passed": true,
+      "detail": "{\"document\":375,\"body\":375}"
+    },
+    {
+      "name": "reduced motion preference active",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "fully offline: no external requests",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no browser console or runtime errors",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "externalRequests": []
+}

@@ -1,0 +1,2217 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-20T19:27:57.730Z",
+  "model": "Canonical Metropolis sampling; ideal points or hard-core planar dipoles; exact all-pair r^-3 potential; no physical time",
+  "config": {
+    "nPerSide": 24,
+    "temp": 1,
+    "coupling": 1.5,
+    "seeds": [
+      17,
+      29,
+      43,
+      71,
+      101
+    ],
+    "closedBurnSweeps": 200,
+    "openSweeps": 4000,
+    "sampleEvery": 20,
+    "lateWindowStart": 3000,
+    "stepSize": 1,
+    "angleStep": 0.6
+  },
+  "modes": [
+    {
+      "id": "ideal_AA",
+      "mode": "ideal_AA",
+      "interaction": "ideal",
+      "identity": "AA",
+      "coupling": 0,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6772878969366951,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 21.88235294117647,
+            "nAR": 26.11764705882353,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 10.823529411764707,
+            "originRightL": 11.058823529411764,
+            "mixingPerParticle": 0.6772878969366951,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.942961804339717
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 22,
+            "nAR": 26,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 10,
+            "originRightL": 12,
+            "mixingPerParticle": 0.6861702232757354,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9428224206349206,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6717823089089193,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 26.372549019607842,
+            "nAR": 21.627450980392158,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14.058823529411764,
+            "originRightL": 12.313725490196079,
+            "mixingPerParticle": 0.6717823089089193,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9450217484663975
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 31,
+            "nAR": 17,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 16,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6490387032263975,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.944796626984127,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6709442196243189,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 26.07843137254902,
+            "nAR": 21.92156862745098,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14.176470588235293,
+            "originRightL": 11.901960784313726,
+            "mixingPerParticle": 0.6709442196243189,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9445767678191268
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 28,
+            "nAR": 20,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 17,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6466540899286765,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9450396825396825,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6722942168607083,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 26,
+            "nAR": 22,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 13.058823529411764,
+            "originRightL": 12.941176470588236,
+            "mixingPerParticle": 0.6722942168607083,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9409939819690439
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 29,
+            "nAR": 19,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9422271825396825,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6817446714643771,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 24,
+            "nAR": 24,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 11.03921568627451,
+            "originRightL": 12.96078431372549,
+            "mixingPerParticle": 0.6817446714643771,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9421369621687036
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 22,
+            "nAR": 26,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 11,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6896709283570267,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9422123015873016,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 24.866666666666667,
+          "sampleStd": 1.915576892937642,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 23.133333333333333,
+          "sampleStd": 1.915576892937642,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 12.63137254901961,
+          "sampleStd": 1.6132977776401711,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.23529411764706,
+          "sampleStd": 0.7946621227121352,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6748106627590038,
+          "sampleStd": 0.004600814477118049,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.9431382529525978,
+          "sampleStd": 0.0016769388606579245,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0
+    },
+    {
+      "id": "ideal_AB",
+      "mode": "ideal_AB",
+      "interaction": "ideal",
+      "identity": "AB",
+      "coupling": 0,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0.6931471805599453,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6772878969366951,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 10.823529411764707,
+            "nAR": 13.176470588235293,
+            "nBL": 11.058823529411764,
+            "nBR": 12.941176470588236,
+            "originLeftL": 10.823529411764707,
+            "originRightL": 11.058823529411764,
+            "mixingPerParticle": 0.6772878969366951,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.942961804339717
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 10,
+            "nAR": 14,
+            "nBL": 12,
+            "nBR": 12,
+            "originLeftL": 10,
+            "originRightL": 12,
+            "mixingPerParticle": 0.6861702232757354,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9428224206349206,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6717823089089193,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 14.058823529411764,
+            "nAR": 9.941176470588236,
+            "nBL": 12.313725490196079,
+            "nBR": 11.686274509803921,
+            "originLeftL": 14.058823529411764,
+            "originRightL": 12.313725490196079,
+            "mixingPerParticle": 0.6717823089089193,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9450217484663975
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 16,
+            "nAR": 8,
+            "nBL": 15,
+            "nBR": 9,
+            "originLeftL": 16,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6490387032263975,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.944796626984127,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6709442196243189,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 14.176470588235293,
+            "nAR": 9.823529411764707,
+            "nBL": 11.901960784313726,
+            "nBR": 12.098039215686274,
+            "originLeftL": 14.176470588235293,
+            "originRightL": 11.901960784313726,
+            "mixingPerParticle": 0.6709442196243189,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9445767678191268
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 17,
+            "nAR": 7,
+            "nBL": 11,
+            "nBR": 13,
+            "originLeftL": 17,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6466540899286765,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9450396825396825,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6722942168607083,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 13.058823529411764,
+            "nAR": 10.941176470588236,
+            "nBL": 12.941176470588236,
+            "nBR": 11.058823529411764,
+            "originLeftL": 13.058823529411764,
+            "originRightL": 12.941176470588236,
+            "mixingPerParticle": 0.6722942168607083,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9409939819690439
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 14,
+            "nAR": 10,
+            "nBL": 15,
+            "nBR": 9,
+            "originLeftL": 14,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9422271825396825,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6817446714643771,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 11.03921568627451,
+            "nAR": 12.96078431372549,
+            "nBL": 12.96078431372549,
+            "nBR": 11.03921568627451,
+            "originLeftL": 11.03921568627451,
+            "originRightL": 12.96078431372549,
+            "mixingPerParticle": 0.6817446714643771,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9421369621687036
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 11,
+            "nAR": 13,
+            "nBL": 11,
+            "nBR": 13,
+            "originLeftL": 11,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6896709283570267,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.9422123015873016,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 12.63137254901961,
+          "sampleStd": 1.6132977776401711,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 11.36862745098039,
+          "sampleStd": 1.6132977776401711,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 12.23529411764706,
+          "sampleStd": 0.7946621227121352,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 11.76470588235294,
+          "sampleStd": 0.7946621227121352,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 12.63137254901961,
+          "sampleStd": 1.6132977776401711,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.23529411764706,
+          "sampleStd": 0.7946621227121352,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6748106627590038,
+          "sampleStd": 0.004600814477118049,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 33.2710646668774,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.9431382529525978,
+          "sampleStd": 0.0016769388606579245,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0.6931471805599453
+    },
+    {
+      "id": "hardcore_AA",
+      "mode": "dipole_AA",
+      "interaction": "hardcore",
+      "identity": "AA",
+      "coupling": 0,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6678921712280449,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 24.92156862745098,
+            "nAR": 23.07843137254902,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14.333333333333334,
+            "originRightL": 10.588235294117647,
+            "mixingPerParticle": 0.6678921712280449,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7158900199012812
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 21,
+            "nAR": 27,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 12,
+            "originRightL": 9,
+            "mixingPerParticle": 0.6773552093589637,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.716577380952381,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6627200754334744,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 26.11764705882353,
+            "nAR": 21.88235294117647,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 15.313725490196079,
+            "originRightL": 10.803921568627452,
+            "mixingPerParticle": 0.6627200754334744,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7204208912422144
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 26,
+            "nAR": 22,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14,
+            "originRightL": 12,
+            "mixingPerParticle": 0.6861702232757355,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7206200396825397,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6597042186645032,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 23.705882352941178,
+            "nAR": 24.294117647058822,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 9.392156862745098,
+            "originRightL": 14.313725490196079,
+            "mixingPerParticle": 0.6597042186645032,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7144453032873168
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 22,
+            "nAR": 26,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 11,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6896709283570267,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7153025793650793,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6861844097240941,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 24.019607843137255,
+            "nAR": 23.980392156862745,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 12.27450980392157,
+            "originRightL": 11.745098039215685,
+            "mixingPerParticle": 0.6861844097240941,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7188216839382012
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 23,
+            "nAR": 25,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 11,
+            "originRightL": 12,
+            "mixingPerParticle": 0.691409054458486,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7188492063492063,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.681744326032521,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 25.41176470588235,
+            "nAR": 22.58823529411765,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 12.196078431372548,
+            "originRightL": 13.215686274509803,
+            "mixingPerParticle": 0.681744326032521,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7160964395030923
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 26,
+            "nAR": 22,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 11,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6756170832575044,
+            "thermoMixTotal": 0,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7170882936507936,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 24.83529411764706,
+          "sampleStd": 0.9905939794595375,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 23.16470588235294,
+          "sampleStd": 0.9905939794595375,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 12.701960784313725,
+          "sampleStd": 2.2845198930778676,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.133333333333331,
+          "sampleStd": 1.5992957888948431,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6716490402165276,
+          "sampleStd": 0.011722958255400213,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.7171348675744211,
+          "sampleStd": 0.002424099607768135,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0
+    },
+    {
+      "id": "hardcore_AB",
+      "mode": "dipole_AB",
+      "interaction": "hardcore",
+      "identity": "AB",
+      "coupling": 0,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0.6931471805599453,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6678921712280449,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 14.333333333333334,
+            "nAR": 9.666666666666666,
+            "nBL": 10.588235294117647,
+            "nBR": 13.411764705882353,
+            "originLeftL": 14.333333333333334,
+            "originRightL": 10.588235294117647,
+            "mixingPerParticle": 0.6678921712280449,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7158900199012812
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 12,
+            "nAR": 12,
+            "nBL": 9,
+            "nBR": 15,
+            "originLeftL": 12,
+            "originRightL": 9,
+            "mixingPerParticle": 0.6773552093589637,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.716577380952381,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6627200754334744,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 15.313725490196079,
+            "nAR": 8.686274509803921,
+            "nBL": 10.803921568627452,
+            "nBR": 13.196078431372548,
+            "originLeftL": 15.313725490196079,
+            "originRightL": 10.803921568627452,
+            "mixingPerParticle": 0.6627200754334744,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7204208912422144
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 14,
+            "nAR": 10,
+            "nBL": 12,
+            "nBR": 12,
+            "originLeftL": 14,
+            "originRightL": 12,
+            "mixingPerParticle": 0.6861702232757355,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7206200396825397,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6597042186645032,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 9.392156862745098,
+            "nAR": 14.607843137254902,
+            "nBL": 14.313725490196079,
+            "nBR": 9.686274509803921,
+            "originLeftL": 9.392156862745098,
+            "originRightL": 14.313725490196079,
+            "mixingPerParticle": 0.6597042186645032,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7144453032873168
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 11,
+            "nAR": 13,
+            "nBL": 11,
+            "nBR": 13,
+            "originLeftL": 11,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6896709283570267,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7153025793650793,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6861844097240941,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 12.27450980392157,
+            "nAR": 11.72549019607843,
+            "nBL": 11.745098039215685,
+            "nBR": 12.254901960784315,
+            "originLeftL": 12.27450980392157,
+            "originRightL": 11.745098039215685,
+            "mixingPerParticle": 0.6861844097240941,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7188216839382012
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 11,
+            "nAR": 13,
+            "nBL": 12,
+            "nBR": 12,
+            "originLeftL": 11,
+            "originRightL": 12,
+            "mixingPerParticle": 0.691409054458486,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7188492063492063,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.681744326032521,
+          "lateMeanEnergyPerParticle": 0,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 12.196078431372548,
+            "nAR": 11.803921568627452,
+            "nBL": 13.215686274509803,
+            "nBR": 10.784313725490197,
+            "originLeftL": 12.196078431372548,
+            "originRightL": 13.215686274509803,
+            "mixingPerParticle": 0.681744326032521,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7160964395030923
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 11,
+            "nAR": 13,
+            "nBL": 15,
+            "nBR": 9,
+            "originLeftL": 11,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6756170832575044,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": 0,
+            "energyPerParticle": 0,
+            "acceptance": 0.7170882936507936,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 12.701960784313725,
+          "sampleStd": 2.2845198930778676,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 11.298039215686275,
+          "sampleStd": 2.2845198930778676,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 12.133333333333331,
+          "sampleStd": 1.5992957888948431,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 11.866666666666669,
+          "sampleStd": 1.5992957888948431,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 12.701960784313725,
+          "sampleStd": 2.2845198930778676,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.133333333333331,
+          "sampleStd": 1.5992957888948431,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6716490402165276,
+          "sampleStd": 0.011722958255400213,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 33.2710646668774,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.7171348675744211,
+          "sampleStd": 0.002424099607768135,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0.6931471805599453
+    },
+    {
+      "id": "dipole_AA",
+      "mode": "dipole_AA",
+      "interaction": "dipole",
+      "identity": "AA",
+      "coupling": 1.5,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6713792925272816,
+          "lateMeanEnergyPerParticle": -0.3809542990968698,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 25.098039215686274,
+            "nAR": 22.901960784313726,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 10.647058823529411,
+            "originRightL": 14.450980392156863,
+            "mixingPerParticle": 0.6713792925272816,
+            "thermoMixTotal": 0,
+            "energy": -18.28580635664975,
+            "energyPerParticle": -0.3809542990968698,
+            "acceptance": 0.48776650902182817
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 23,
+            "nAR": 25,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 8,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6490387032263975,
+            "thermoMixTotal": 0,
+            "energy": -26.13522021691529,
+            "energyPerParticle": -0.5444837545190685,
+            "acceptance": 0.4883581349206349,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6735254436152216,
+          "lateMeanEnergyPerParticle": -0.44712930210405616,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 26.098039215686274,
+            "nAR": 21.901960784313726,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14.352941176470589,
+            "originRightL": 11.745098039215685,
+            "mixingPerParticle": 0.6735254436152216,
+            "thermoMixTotal": 0,
+            "energy": -21.46220650099469,
+            "energyPerParticle": -0.44712930210405616,
+            "acceptance": 0.48455929791665514
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 29,
+            "nAR": 19,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 18,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6260030364879174,
+            "thermoMixTotal": 0,
+            "energy": -23.405841572338566,
+            "energyPerParticle": -0.48762169942372013,
+            "acceptance": 0.48322916666666665,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6859792692464773,
+          "lateMeanEnergyPerParticle": -0.4109346677504253,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 25.627450980392158,
+            "nAR": 22.372549019607842,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 13.411764705882353,
+            "originRightL": 12.215686274509803,
+            "mixingPerParticle": 0.6859792692464773,
+            "thermoMixTotal": 0,
+            "energy": -19.724864052020422,
+            "energyPerParticle": -0.4109346677504253,
+            "acceptance": 0.4846623119772537
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 27,
+            "nAR": 21,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 13,
+            "originRightL": 14,
+            "mixingPerParticle": 0.6844320971742763,
+            "thermoMixTotal": 0,
+            "energy": -25.431748401259494,
+            "energyPerParticle": -0.5298280916929061,
+            "acceptance": 0.484280753968254,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6500872783408909,
+          "lateMeanEnergyPerParticle": -0.4870372186751723,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 25.50980392156863,
+            "nAR": 22.49019607843137,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 15.823529411764707,
+            "originRightL": 9.686274509803921,
+            "mixingPerParticle": 0.6500872783408909,
+            "thermoMixTotal": 0,
+            "energy": -23.377786496408273,
+            "energyPerParticle": -0.4870372186751723,
+            "acceptance": 0.4810622426972694
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 23,
+            "nAR": 25,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 14,
+            "originRightL": 9,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 0,
+            "energy": -27.264617239703885,
+            "energyPerParticle": -0.5680128591604976,
+            "acceptance": 0.4800892857142857,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6568620408078859,
+          "lateMeanEnergyPerParticle": -0.4819397795964172,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 28.862745098039216,
+            "nAR": 19.137254901960784,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 13.235294117647058,
+            "originRightL": 15.627450980392156,
+            "mixingPerParticle": 0.6568620408078859,
+            "thermoMixTotal": 0,
+            "energy": -23.133109420628017,
+            "energyPerParticle": -0.4819397795964172,
+            "acceptance": 0.4832727823360466
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 25,
+            "nAR": 23,
+            "nBL": 0,
+            "nBR": 0,
+            "originLeftL": 10,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 0,
+            "energy": -22.21557145528901,
+            "energyPerParticle": -0.46282440531852104,
+            "acceptance": 0.4808531746031746,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 26.239215686274513,
+          "sampleStd": 1.5092563305417264,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 21.760784313725487,
+          "sampleStd": 1.5092563305417264,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 13.494117647058824,
+          "sampleStd": 1.8936243420459427,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.745098039215685,
+          "sampleStd": 2.337448998388886,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6675666649075513,
+          "sampleStd": 0.014223089533021998,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 0,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": -21.196754565340232,
+          "sampleStd": 2.191855167258825,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": -0.4415990534445881,
+          "sampleStd": 0.04566364931789224,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.4842646287898106,
+          "sampleStd": 0.0024365540751659534,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0
+    },
+    {
+      "id": "dipole_AB",
+      "mode": "dipole_AB",
+      "interaction": "dipole",
+      "identity": "AB",
+      "coupling": 1.5,
+      "nParticles": 48,
+      "referenceMixingPerParticle": 0.6931471805599453,
+      "referenceMeaning": "bulk thermodynamic entropy of mixing per particle / k_B; not the measured origin-label diagnostic",
+      "originDiagnosticUpperBound": 0.6931471805599453,
+      "seedResults": [
+        {
+          "seed": 17,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6713792925272816,
+          "lateMeanEnergyPerParticle": -0.3809542990968698,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 10.647058823529411,
+            "nAR": 13.352941176470589,
+            "nBL": 14.450980392156863,
+            "nBR": 9.549019607843137,
+            "originLeftL": 10.647058823529411,
+            "originRightL": 14.450980392156863,
+            "mixingPerParticle": 0.6713792925272816,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": -18.28580635664975,
+            "energyPerParticle": -0.3809542990968698,
+            "acceptance": 0.48776650902182817
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 8,
+            "nAR": 16,
+            "nBL": 15,
+            "nBR": 9,
+            "originLeftL": 8,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6490387032263975,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": -26.13522021691529,
+            "energyPerParticle": -0.5444837545190685,
+            "acceptance": 0.4883581349206349,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 29,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6735254436152216,
+          "lateMeanEnergyPerParticle": -0.44712930210405616,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 14.352941176470589,
+            "nAR": 9.647058823529411,
+            "nBL": 11.745098039215685,
+            "nBR": 12.254901960784315,
+            "originLeftL": 14.352941176470589,
+            "originRightL": 11.745098039215685,
+            "mixingPerParticle": 0.6735254436152216,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": -21.46220650099469,
+            "energyPerParticle": -0.44712930210405616,
+            "acceptance": 0.48455929791665514
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 18,
+            "nAR": 6,
+            "nBL": 11,
+            "nBR": 13,
+            "originLeftL": 18,
+            "originRightL": 11,
+            "mixingPerParticle": 0.6260030364879174,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": -23.405841572338566,
+            "energyPerParticle": -0.48762169942372013,
+            "acceptance": 0.48322916666666665,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 43,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6859792692464773,
+          "lateMeanEnergyPerParticle": -0.4109346677504253,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 13.411764705882353,
+            "nAR": 10.588235294117647,
+            "nBL": 12.215686274509803,
+            "nBR": 11.784313725490197,
+            "originLeftL": 13.411764705882353,
+            "originRightL": 12.215686274509803,
+            "mixingPerParticle": 0.6859792692464773,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": -19.724864052020422,
+            "energyPerParticle": -0.4109346677504253,
+            "acceptance": 0.4846623119772537
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 13,
+            "nAR": 11,
+            "nBL": 14,
+            "nBR": 10,
+            "originLeftL": 13,
+            "originRightL": 14,
+            "mixingPerParticle": 0.6844320971742763,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": -25.431748401259494,
+            "energyPerParticle": -0.5298280916929061,
+            "acceptance": 0.484280753968254,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 71,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6500872783408909,
+          "lateMeanEnergyPerParticle": -0.4870372186751723,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 15.823529411764707,
+            "nAR": 8.176470588235293,
+            "nBL": 9.686274509803921,
+            "nBR": 14.313725490196079,
+            "originLeftL": 15.823529411764707,
+            "originRightL": 9.686274509803921,
+            "mixingPerParticle": 0.6500872783408909,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": -23.377786496408273,
+            "energyPerParticle": -0.4870372186751723,
+            "acceptance": 0.4810622426972694
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 14,
+            "nAR": 10,
+            "nBL": 9,
+            "nBR": 15,
+            "originLeftL": 14,
+            "originRightL": 9,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": -27.264617239703885,
+            "energyPerParticle": -0.5680128591604976,
+            "acceptance": 0.4800892857142857,
+            "partitionOpen": true
+          }
+        },
+        {
+          "seed": 101,
+          "lateSampleCount": 51,
+          "lateMeanMixingPerParticle": 0.6568620408078859,
+          "lateMeanEnergyPerParticle": -0.4819397795964172,
+          "lateMeans": {
+            "sweeps": 3700,
+            "totalN": 48,
+            "nAL": 13.235294117647058,
+            "nAR": 10.764705882352942,
+            "nBL": 15.627450980392156,
+            "nBR": 8.372549019607844,
+            "originLeftL": 13.235294117647058,
+            "originRightL": 15.627450980392156,
+            "mixingPerParticle": 0.6568620408078859,
+            "thermoMixTotal": 33.2710646668774,
+            "energy": -23.133109420628017,
+            "energyPerParticle": -0.4819397795964172,
+            "acceptance": 0.4832727823360466
+          },
+          "finalMetrics": {
+            "sweeps": 4200,
+            "totalN": 48,
+            "nAL": 10,
+            "nAR": 14,
+            "nBL": 15,
+            "nBR": 9,
+            "originLeftL": 10,
+            "originRightL": 15,
+            "mixingPerParticle": 0.6703782520747539,
+            "thermoMixTotal": 33.27106466687737,
+            "energy": -22.21557145528901,
+            "energyPerParticle": -0.46282440531852104,
+            "acceptance": 0.4808531746031746,
+            "partitionOpen": true
+          }
+        }
+      ],
+      "acrossSeeds": {
+        "sweeps": {
+          "mean": 3700,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "totalN": {
+          "mean": 48,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "nAL": {
+          "mean": 13.494117647058824,
+          "sampleStd": 1.8936243420459427,
+          "n": 5
+        },
+        "nAR": {
+          "mean": 10.505882352941176,
+          "sampleStd": 1.8936243420459427,
+          "n": 5
+        },
+        "nBL": {
+          "mean": 12.745098039215685,
+          "sampleStd": 2.337448998388886,
+          "n": 5
+        },
+        "nBR": {
+          "mean": 11.254901960784315,
+          "sampleStd": 2.337448998388886,
+          "n": 5
+        },
+        "originLeftL": {
+          "mean": 13.494117647058824,
+          "sampleStd": 1.8936243420459427,
+          "n": 5
+        },
+        "originRightL": {
+          "mean": 12.745098039215685,
+          "sampleStd": 2.337448998388886,
+          "n": 5
+        },
+        "mixingPerParticle": {
+          "mean": 0.6675666649075513,
+          "sampleStd": 0.014223089533021998,
+          "n": 5
+        },
+        "thermoMixTotal": {
+          "mean": 33.2710646668774,
+          "sampleStd": 0,
+          "n": 5
+        },
+        "energy": {
+          "mean": -21.196754565340232,
+          "sampleStd": 2.191855167258825,
+          "n": 5
+        },
+        "energyPerParticle": {
+          "mean": -0.4415990534445881,
+          "sampleStd": 0.04566364931789224,
+          "n": 5
+        },
+        "acceptance": {
+          "mean": 0.4842646287898106,
+          "sampleStd": 0.0024365540751659534,
+          "n": 5
+        }
+      },
+      "thermodynamicReferencePerParticle": 0.6931471805599453
+    }
+  ],
+  "originDiagnosticReference": {
+    "upperBound": 0.6931471805599453,
+    "finiteNIdealEquilibriumMean": 0.6718524768181912,
+    "derivation": "sum_k binomial(nPerSide,k) 2^(-nPerSide) H(k/nPerSide); ideal independent point particles in equal half-volumes",
+    "appliesTo": "ideal only; interactions correlate positions so the binomial expression is not a universal interacting reference"
+  },
+  "checks": {
+    "passed": 115,
+    "total": 115,
+    "details": [
+      {
+        "name": "ideal_AA/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed17: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed29: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed43: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed71: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed101: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AA/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed17: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal/17: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed29: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal/29: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed43: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal/43: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed71: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal/71: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed101: ideal potential energy zero",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal_AB/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "ideal/101: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AA/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore/17: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore/29: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore/43: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore/71: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore_AB/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "hardcore/101: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AA/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed17: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed17: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed17: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole/17: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed29: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed29: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed29: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole/29: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed43: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed43: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed43: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole/43: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed71: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed71: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed71: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole/71: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed101: finite late metrics",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed101: thermodynamic reference",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole_AB/seed101: cached energy equals all-pair recomputation",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "dipole/101: AA/AB identical mechanical trajectory",
+        "passed": true,
+        "detail": ""
+      }
+    ]
+  },
+  "caveats": [
+    "The spatial origin-label mixing diagnostic is not the thermodynamic entropy of an interacting system.",
+    "AA has zero extensive thermodynamic mixing entropy under matched initial conditions even when origin labels spread.",
+    "The AB ln(2) reference assumes mechanically identical species, equal populations, and equal initial densities.",
+    "The table reports the mean and sample standard deviation of five seed-wise late-window means, not standard error.",
+    "Finite sample size, temporal correlation, finite geometry and a finite run length affect the diagnostics; no convergence proof is claimed.",
+    "The 200 closed-partition preparation sweeps are a chosen protocol; they do not certify equilibrium, particularly at stronger coupling.",
+    "Each AA/AB pair uses the same seed and has identical mechanical dynamics by construction; these pairs are not independent samples."
+  ]
+}
