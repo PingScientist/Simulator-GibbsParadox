@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gibbs Mixing: Ideal Gas & Dipolar Colloidal Chains</title>
+  
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      startup: { typeset: true }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #151e2e;
+      --border: #243247;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --gibbs: #10b981;
+      --mag: #eab308;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 16px; display: flex; flex-direction: column; align-items: center; }
+    header { text-align: center; margin-bottom: 16px; max-width: 950px; }
+    h1 { font-size: 1.55rem; color: var(--accent); margin-bottom: 6px; }
+    p.desc { font-size: 0.88rem; color: var(--muted); line-height: 1.4; }
+
+    .layout { display: grid; grid-template-columns: 1fr 430px; gap: 16px; width: 100%; max-width: 1280px; }
+    @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .canvas-container { position: relative; width: 100%; height: 380px; background: #030712; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+    canvas#simCanvas { width: 100%; height: 100%; display: block; }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { background: #1e293b; color: var(--text); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+    button:hover { background: #334155; }
+    button.primary { background: #2563eb; border-color: #2563eb; color: white; }
+    button.warning { background: #d97706; border-color: #d97706; color: white; }
+    button.control-btn { background: #0284c7; border-color: #0284c7; color: white; }
+
+    select {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .slider-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+    .slider-row input { width: 100%; accent-color: var(--accent); margin-top: 4px; }
+
+    table.diag-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    table.diag-table th, table.diag-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: middle; }
+    table.diag-table th { background: rgba(255,255,255,0.03); color: var(--muted); }
+
+    .chart-box { position: relative; height: 180px; width: 100%; }
+    .info-box { background: rgba(56, 189, 248, 0.06); border-left: 3px solid var(--accent); padding: 10px; border-radius: 0 6px 6px 0; font-size: 0.8rem; line-height: 1.45; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gibbs Paradox: Ideal Gas & Interacting Dipolar Chains</h1>
+    <p class="desc">
+      Strict physical indistinguishability: particles have no identity tags. Low fluid viscosity and extended magnetic interaction range allow rapid dipolar chain self-assembly and smooth mixing.
+    </p>
+  </header>
+
+  <div class="layout">
+    <!-- Left Column: Simulation Canvas & Controls -->
+    <div class="panel">
+      <div class="canvas-container">
+        <canvas id="simCanvas"></canvas>
+      </div>
+
+      <div class="btn-group">
+        <button id="playPauseBtn" class="control-btn">Pause</button>
+        <select id="systemSelect">
+          <option value="ideal_AA">1. Original Ideal Gas: Identical (A + A)</option>
+          <option value="ideal_AB">2. Original Ideal Gas: Distinct (A + B)</option>
+          <option value="dipole_AA">3. Interacting Magnetic: Identical (A + A)</option>
+          <option value="dipole_AB">4. Interacting Magnetic: Distinct (A + B)</option>
+        </select>
+        <button id="partitionBtn" class="primary">Remove Partition</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <label>Particles per side ($N$): <span id="nLabel" style="color:var(--accent); font-weight:bold;">40</span></label>
+          <input type="range" id="nRange" min="15" max="80" step="5" value="40">
+        </div>
+        <div>
+          <label>Dipole Strength $\mu$: <span id="dipoleLabel" style="color:var(--mag); font-weight:bold;">1.2</span></label>
+          <input type="range" id="dipoleRange" min="0.0" max="2.5" step="0.1" value="1.2">
+        </div>
+        <div>
+          <label>Thermal Temp ($T$): <span id="tempLabel" style="color:var(--accent); font-weight:bold;">1.00x</span></label>
+          <input type="range" id="tempRange" min="0.5" max="3.0" step="0.25" value="1.0">
+        </div>
+      </div>
+
+      <div class="info-box" id="explanationText"></div>
+    </div>
+
+    <!-- Right Column: Quantitative Entropy Panel -->
+    <div class="panel">
+      <h3 style="font-size: 0.95rem;">Gibbs Thermodynamic Readouts</h3>
+      
+      <table class="diag-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Analytical Expression</th>
+            <th>Numerical Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Theoretical \(S_{\text{after}}\)</strong></td>
+            <td id="funcAfter">\(2N k_B \ln(2V/2N) + 2N k_B\)</td>
+            <td id="valAfter" style="font-weight: bold; font-family: monospace;">-215.11 kB</td>
+          </tr>
+          <tr>
+            <td><strong>Theoretical Asymptote \(\Delta S_{\text{mix}}\)</strong></td>
+            <td id="funcMix">\(0\)</td>
+            <td id="valMix" style="font-weight: bold; font-family: monospace; color: var(--gibbs);">0.00 kB</td>
+          </tr>
+          <tr>
+            <td><strong>Instantaneous \(\Delta S(t)\)</strong><br><small style="color:var(--muted)">2-Bin Shannon Tracking</small></td>
+            <td id="funcInst">\(-N k_B \sum p_i \ln p_i\)</td>
+            <td id="valInst" style="font-weight: bold; font-family: monospace; color: var(--accent);">0.00 kB</td>
+          </tr>
+          <tr>
+            <td><strong>Medium & Interaction</strong></td>
+            <td id="interactionType">Stokes Fluid + Dipoles</td>
+            <td id="valBoundary" style="font-family: monospace; font-size: 0.8rem; color: var(--mag);">U_cross = 0.00 ε</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div>
+        <h4 style="font-size: 0.8rem; color: var(--muted); margin-bottom: 4px;">Dynamic Entropy Evolution \(\Delta S(t) / k_B\):</h4>
+        <div class="chart-box">
+          <canvas id="entropyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Controls
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const systemSelect = document.getElementById('systemSelect');
+    const partitionBtn = document.getElementById('partitionBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const nRange = document.getElementById('nRange');
+    const nLabel = document.getElementById('nLabel');
+    const dipoleRange = document.getElementById('dipoleRange');
+    const dipoleLabel = document.getElementById('dipoleLabel');
+    const tempRange = document.getElementById('tempRange');
+    const tempLabel = document.getElementById('tempLabel');
+
+    // Table elements
+    const funcAfter = document.getElementById('funcAfter');
+    const valAfter = document.getElementById('valAfter');
+    const funcMix = document.getElementById('funcMix');
+    const valMix = document.getElementById('valMix');
+    const funcInst = document.getElementById('funcInst');
+    const valInst = document.getElementById('valInst');
+    const interactionType = document.getElementById('interactionType');
+    const valBoundary = document.getElementById('valBoundary');
+    const explanationText = document.getElementById('explanationText');
+
+    let width, height;
+    function resize() {
+      width = canvas.parentElement.clientWidth;
+      height = canvas.parentElement.clientHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // State Variables
+    let isRunning = true;
+    let selectedMode = 'dipole_AA';
+    systemSelect.value = 'dipole_AA';
+    let partitionOpen = false;
+    let hasEverOpened = false;
+    let N = parseInt(nRange.value);
+    let mu = parseFloat(dipoleRange.value);
+    let temp = parseFloat(tempRange.value);
+    const kB = 1.0;
+    let particles = [];
+    let activeBonds = [];
+    let currentCrossEnergy = 0;
+
+    class Particle {
+      constructor(x, y, species, isMagnetic) {
+        this.x = x;
+        this.y = y;
+        this.radius = 5.5;
+        this.species = species; // 'A' or 'B'
+        this.isMagnetic = isMagnetic;
+        
+        this.theta = Math.random() * Math.PI * 2;
+        this.omega = 0;
+
+        const initSpeed = Math.sqrt(temp) * 1.5;
+        const angle = Math.random() * Math.PI * 2;
+        this.vx = Math.cos(angle) * initSpeed;
+        this.vy = Math.sin(angle) * initSpeed;
+        this.fx = 0;
+        this.fy = 0;
+        this.torque = 0;
+      }
+
+      update(dt) {
+        const isBeads = selectedMode.startsWith('dipole');
+
+        if (isBeads) {
+          // Greatly reduced viscosity (Stokes drag gamma: 0.08 -> 0.025)
+          const gamma = 0.025;
+          const thermalKick = Math.sqrt(2 * gamma * temp) * 1.4;
+
+          this.vx += (this.fx - gamma * this.vx + (Math.random() - 0.5) * thermalKick) * dt;
+          this.vy += (this.fy - gamma * this.vy + (Math.random() - 0.5) * thermalKick) * dt;
+
+          if (this.isMagnetic) {
+            // Rotational drag also reduced for agile orientation adjustments
+            this.omega += (this.torque - gamma * 0.25 * this.omega + (Math.random() - 0.5) * 0.35) * dt;
+            this.theta += this.omega * dt;
+          }
+        } else {
+          // Vacuum ideal gas: purely ballistic
+          this.vx += this.fx * dt;
+          this.vy += this.fy * dt;
+
+          const currentSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+          const targetSpeed = Math.sqrt(temp) * 2.2;
+          if (currentSpeed > 0.001) {
+            this.vx = (this.vx / currentSpeed) * targetSpeed;
+            this.vy = (this.vy / currentSpeed) * targetSpeed;
+          }
+        }
+
+        // Clamp velocity to prevent clipping
+        const vMag = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        const maxV = 7.0;
+        if (vMag > maxV) {
+          this.vx = (this.vx / vMag) * maxV;
+          this.vy = (this.vy / vMag) * maxV;
+        }
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+
+        // Container boundary reflection
+        if (this.x - this.radius < 0) { this.x = this.radius; this.vx = Math.abs(this.vx); }
+        if (this.x + this.radius > width) { this.x = width - this.radius; this.vx = -Math.abs(this.vx); }
+        if (this.y - this.radius < 0) { this.y = this.radius; this.vy = Math.abs(this.vy); }
+        if (this.y + this.radius > height) { this.y = height - this.radius; this.vy = -Math.abs(this.vy); }
+
+        // Center partition reflection (kinematic barrier only)
+        if (!partitionOpen) {
+          const midX = width / 2;
+          if (this.vx > 0 && this.x + this.radius >= midX && this.x < midX) {
+            this.x = midX - this.radius;
+            this.vx = -Math.abs(this.vx);
+          } else if (this.vx < 0 && this.x - this.radius <= midX && this.x > midX) {
+            this.x = midX + this.radius;
+            this.vx = Math.abs(this.vx);
+          }
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+        if (this.isMagnetic) {
+          if (selectedMode === 'dipole_AB') {
+            ctx.fillStyle = (this.species === 'A') ? '#38bdf8' : '#f43f5e';
+          } else {
+            ctx.fillStyle = '#eab308';
+          }
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          // Draw Dipole Arrow
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(
+            this.x + Math.cos(this.theta) * (this.radius + 4.5),
+            this.y + Math.sin(this.theta) * (this.radius + 4.5)
+          );
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2.2;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = (this.species === 'A') ? '#38bdf8' : '#f43f5e';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        ctx.closePath();
+      }
+    }
+
+    function computeForces() {
+      particles.forEach(p => { p.fx = 0; p.fy = 0; p.torque = 0; });
+      activeBonds = [];
+      currentCrossEnergy = 0;
+
+      const isInteracting = selectedMode.startsWith('dipole');
+      // Cutoff distance increased from 46.0 -> 75.0 px for wider reach
+      const cutoff = 75.0;
+      const midX = width / 2;
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          // Capped steric repulsion to avoid infinite acceleration spikes
+          const minAllowed = p1.radius + p2.radius;
+          if (dist < minAllowed && dist > 0.001) {
+            const overlap = minAllowed - dist;
+            const repForce = Math.min(overlap * 5.0, 15.0);
+            p1.fx -= (dx / dist) * repForce;
+            p1.fy -= (dy / dist) * repForce;
+            p2.fx += (dx / dist) * repForce;
+            p2.fy += (dy / dist) * repForce;
+          }
+
+          // Long-range dipole interaction (penetrates non-magnetic partition)
+          if (isInteracting && p1.isMagnetic && p2.isMagnetic && dist < cutoff && dist >= minAllowed) {
+            const r_hat_x = dx / dist;
+            const r_hat_y = dy / dist;
+
+            const m1x = Math.cos(p1.theta), m1y = Math.sin(p1.theta);
+            const m2x = Math.cos(p2.theta), m2y = Math.sin(p2.theta);
+
+            const m1_dot_m2 = m1x * m2x + m1y * m2y;
+            const m1_dot_r = m1x * r_hat_x + m1y * r_hat_y;
+            const m2_dot_r = m2x * r_hat_x + m2y * r_hat_y;
+
+            // Dipole interaction energy: U = (mu^2 / r^3) * [m1·m2 - 3(m1·r)(m2·r)]
+            const u_dip = (mu * mu / Math.pow(dist, 2.0)) * (m1_dot_m2 - 3 * m1_dot_r * m2_dot_r);
+
+            if ((p1.x < midX && p2.x >= midX) || (p1.x >= midX && p2.x < midX)) {
+              currentCrossEnergy += u_dip;
+            }
+
+            // Visualize chain bonds when head-to-tail attraction is formed
+            if (u_dip < -0.30 && dist < minAllowed * 1.6) {
+              activeBonds.push({ x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y });
+            }
+
+            // Radial attraction/repulsion force
+            const f_mag = -(3.2 * mu * mu / Math.pow(dist, 2.8)) * (m1_dot_m2 - 3 * m1_dot_r * m2_dot_r);
+            p1.fx -= r_hat_x * f_mag;
+            p1.fy -= r_hat_y * f_mag;
+            p2.fx += r_hat_x * f_mag;
+            p2.fy += r_hat_y * f_mag;
+
+            // Alignment torques
+            const t1 = (mu * mu / Math.pow(dist, 2.0)) * (m1x * m2y - m1y * m2x - 3 * m1_dot_r * (m1x * r_hat_y - m1y * r_hat_x));
+            const t2 = (mu * mu / Math.pow(dist, 2.0)) * (m2x * m1y - m2y * m1x - 3 * m2_dot_r * (m2x * r_hat_y - m2y * r_hat_x));
+            p1.torque += t1 * 0.28;
+            p2.torque += t2 * 0.28;
+          }
+        }
+      }
+    }
+
+    function drawChains() {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(234, 179, 8, 0.75)';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([4, 3]);
+      activeBonds.forEach(bond => {
+        ctx.beginPath();
+        ctx.moveTo(bond.x1, bond.y1);
+        ctx.lineTo(bond.x2, bond.y2);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+
+    // Overlap-free placement helper (Rejection sampling)
+    function generateNonOverlappingPos(minX, maxX, minY, maxY, existingList, minSpacing = 16.0) {
+      let attempts = 0;
+      while (attempts < 500) {
+        const x = Math.random() * (maxX - minX) + minX;
+        const y = Math.random() * (maxY - minY) + minY;
+        let conflict = false;
+
+        for (let p of existingList) {
+          const dx = p.x - x;
+          const dy = p.y - y;
+          if (dx * dx + dy * dy < minSpacing * minSpacing) {
+            conflict = true;
+            break;
+          }
+        }
+
+        if (!conflict) return { x, y };
+        attempts++;
+      }
+      return { x: Math.random() * (maxX - minX) + minX, y: Math.random() * (maxY - minY) + minY };
+    }
+
+    function initParticles() {
+      particles = [];
+      const midX = width / 2;
+
+      let leftSpecies = 'A', rightSpecies = 'A';
+      let leftIsMag = false, rightIsMag = false;
+
+      if (selectedMode === 'ideal_AA') {
+        leftSpecies = 'A'; rightSpecies = 'A';
+      } else if (selectedMode === 'ideal_AB') {
+        leftSpecies = 'A'; rightSpecies = 'B';
+      } else if (selectedMode === 'dipole_AA') {
+        leftSpecies = 'A'; rightSpecies = 'A';
+        leftIsMag = true; rightIsMag = true;
+      } else if (selectedMode === 'dipole_AB') {
+        leftSpecies = 'A'; rightSpecies = 'B';
+        leftIsMag = true; rightIsMag = true;
+      }
+
+      // Left chamber
+      for (let i = 0; i < N; i++) {
+        const pos = generateNonOverlappingPos(20, midX - 20, 20, height - 20, particles, 18.0);
+        particles.push(new Particle(pos.x, pos.y, leftSpecies, leftIsMag));
+      }
+
+      // Right chamber
+      for (let i = 0; i < N; i++) {
+        const pos = generateNonOverlappingPos(midX + 20, width - 20, 20, height - 20, particles, 18.0);
+        particles.push(new Particle(pos.x, pos.y, rightSpecies, rightIsMag));
+      }
+
+      updateMetrics();
+      updateExplanation();
+    }
+
+    function triggerMathJax() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([funcAfter, funcMix, funcInst, explanationText]);
+      }
+    }
+
+    function isIdenticalSystem() {
+      return (selectedMode === 'ideal_AA' || selectedMode === 'dipole_AA');
+    }
+
+    function updateMetrics() {
+      const deltaS_ideal = 2 * N * kB * Math.LN2;
+      const V = 1.0;
+      const exact_S_after = 2 * N * kB * (Math.log(V / N) + 1.0);
+
+      if (isIdenticalSystem()) {
+        funcAfter.innerHTML = "\\(2N k_B \\ln(2V/2N) + 2N k_B\\)";
+        valAfter.textContent = `${exact_S_after.toFixed(2)} kB`;
+        funcMix.innerHTML = "\\(0\\)";
+        valMix.textContent = `0.00 kB`;
+        valMix.style.color = "var(--gibbs)";
+      } else {
+        funcAfter.innerHTML = "\\(2N k_B \\ln(2V/N) + 2N k_B\\)";
+        funcMix.innerHTML = "\\(2N k_B \\ln 2\\)";
+
+        if (!partitionOpen && !hasEverOpened) {
+          valAfter.textContent = `${exact_S_after.toFixed(2)} kB`;
+          valMix.textContent = `0.00 kB`;
+          valMix.style.color = "var(--muted)";
+        } else {
+          valAfter.textContent = `${(exact_S_after + deltaS_ideal).toFixed(2)} kB`;
+          valMix.textContent = `+${deltaS_ideal.toFixed(2)} kB`;
+          valMix.style.color = "var(--gibbs)";
+        }
+      }
+
+      if (selectedMode.startsWith('ideal')) {
+        interactionType.textContent = "Ideal Gas in Vacuum";
+        valBoundary.textContent = "U_cross = 0.00 ε";
+      } else {
+        interactionType.textContent = "Stokes Fluid + Dipoles";
+      }
+
+      const theoLimit = isIdenticalSystem() ? 0.0 : ((partitionOpen || hasEverOpened) ? deltaS_ideal : 0.0);
+      entropyChart.options.scales.y.suggestedMax = Math.max(60, deltaS_ideal * 1.25);
+      entropyChart.data.datasets[1].data = new Array(entropyChart.data.labels.length).fill(theoLimit);
+      entropyChart.update('none');
+
+      triggerMathJax();
+    }
+
+    function updateExplanation() {
+      if (selectedMode === 'ideal_AA') {
+        explanationText.innerHTML = `<strong>Original Gibbs Ideal ($A + A$):</strong> Indistinguishable ideal gas in vacuum. Particles move ballistically without solvent drag. Uniform $N/V$ guarantees <strong>$\\Delta S_{\\text{mix}} = 0$</strong> at all times.`;
+      } else if (selectedMode === 'ideal_AB') {
+        explanationText.innerHTML = `<strong>Original Gibbs Ideal ($A + B$):</strong> Distinct ideal gases (Cyan vs. Red) expanding ballistically. Removing the partition produces smooth diffusion reaching the classic limit <strong>$\\Delta S_{\\text{mix}} = 2N k_B \\ln 2$</strong>.`;
+      } else if (selectedMode === 'dipole_AA') {
+        explanationText.innerHTML = `<strong>Identical Magnetic Beads ($A + A$):</strong> All particles carry identical magnetic dipoles $\\mu$. They self-assemble into flexible head-to-tail chains (dashed links). Because the bulk fluid is extensive and homogeneous, <strong>$\\Delta S_{\\text{mix}} = 0$ in the thermodynamic limit</strong>. Notice the non-magnetic partition allows fields to penetrate ($U_{\\text{cross}} \\neq 0$) even before opening!`;
+      } else {
+        explanationText.innerHTML = `<strong>Distinct Magnetic Isotopes ($A + B$):</strong> Both species carry the <em>exact same dipole strength $\\mu$</em> and form hybrid chains ($\\dots A-B-B-A \\dots$), but carry distinguishable labels (Cyan vs. Rose). This isolates pure mixing entropy without energetic distortion!`;
+      }
+      triggerMathJax();
+    }
+
+    // Chart.js Setup
+    const chartCtx = document.getElementById('entropyChart').getContext('2d');
+    const entropyChart = new Chart(chartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Instantaneous ΔS(t) / kB',
+            borderColor: '#38bdf8',
+            borderWidth: 2,
+            data: [],
+            tension: 0.1,
+            pointRadius: 0
+          },
+          {
+            label: 'Theoretical Limit (Asymptote)',
+            borderColor: '#94a3b8',
+            borderDash: [5, 5],
+            borderWidth: 1.5,
+            data: [],
+            pointRadius: 0,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        scales: {
+          x: { display: false },
+          y: {
+            suggestedMin: -2,
+            suggestedMax: 65,
+            grid: { color: '#243247' },
+            ticks: { color: '#94a3b8', font: { size: 9 } }
+          }
+        },
+        plugins: {
+          legend: { labels: { color: '#cbd5e1', font: { size: 10 } } }
+        }
+      }
+    });
+
+    function resetSimulation() {
+      partitionOpen = false;
+      hasEverOpened = false;
+      partitionBtn.textContent = 'Remove Partition';
+      partitionBtn.className = 'primary';
+      entropyChart.data.labels = [];
+      entropyChart.data.datasets[0].data = [];
+      entropyChart.data.datasets[1].data = [];
+      entropyChart.update();
+      initParticles();
+    }
+
+    function computeTwoBinEntropy() {
+      const midX = width / 2;
+      if (!hasEverOpened) return 0.0;
+
+      if (isIdenticalSystem()) {
+        // A + A case: Density fluctuation entropy relative to equilibrium (N, N)
+        const nL = particles.filter(p => p.x < midX).length;
+        const nR = particles.length - nL;
+        const N_tot = particles.length;
+
+        const pL = nL / N_tot;
+        const pR = nR / N_tot;
+
+        let deltaS = 0;
+        if (pL > 0) deltaS -= pL * Math.log(2 * pL);
+        if (pR > 0) deltaS -= pR * Math.log(2 * pR);
+
+        // deltaS is <= 0; it dips whenever nL != nR
+        return N_tot * kB * deltaS;
+      } else {
+        // A + B case: Species mixing entropy
+        const aInL = particles.filter(p => p.species === 'A' && p.x < midX).length;
+        const aInR = N - aInL;
+        const bInL = particles.filter(p => p.species === 'B' && p.x < midX).length;
+        const bInR = N - bInL;
+
+        const pAL = aInL / N;
+        const pAR = aInR / N;
+        let sA = 0;
+        if (pAL > 0) sA -= pAL * Math.log(pAL);
+        if (pAR > 0) sA -= pAR * Math.log(pAR);
+
+        const pBL = bInL / N;
+        const pBR = bInR / N;
+        let sB = 0;
+        if (pBL > 0) sB -= pBL * Math.log(pBL);
+        if (pBR > 0) sB -= pBR * Math.log(pBR);
+
+        return N * kB * (sA + sB);
+      }
+    }
+
+    // Event Listeners
+    playPauseBtn.addEventListener('click', () => {
+      isRunning = !isRunning;
+      playPauseBtn.textContent = isRunning ? 'Pause' : 'Continue';
+      playPauseBtn.style.background = isRunning ? '#0284c7' : '#16a34a';
+    });
+
+    systemSelect.addEventListener('change', (e) => {
+      selectedMode = e.target.value;
+      resetSimulation();
+    });
+
+    partitionBtn.addEventListener('click', () => {
+      partitionOpen = !partitionOpen;
+      if (partitionOpen) hasEverOpened = true;
+      partitionBtn.textContent = partitionOpen ? 'Insert Partition' : 'Remove Partition';
+      partitionBtn.className = partitionOpen ? 'warning' : 'primary';
+      updateMetrics();
+    });
+
+    resetBtn.addEventListener('click', resetSimulation);
+
+    nRange.addEventListener('input', (e) => {
+      N = parseInt(e.target.value);
+      nLabel.textContent = N;
+      resetSimulation();
+    });
+
+    dipoleRange.addEventListener('input', (e) => {
+      mu = parseFloat(e.target.value);
+      dipoleLabel.textContent = mu.toFixed(1);
+    });
+
+    tempRange.addEventListener('input', (e) => {
+      temp = parseFloat(e.target.value);
+      tempLabel.textContent = `${temp.toFixed(2)}x`;
+    });
+
+    let step = 0;
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      const midX = width / 2;
+
+      // Draw Center Partition
+      if (!partitionOpen) {
+        ctx.beginPath();
+        ctx.moveTo(midX, 0);
+        ctx.lineTo(midX, height);
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.closePath();
+      } else {
+        ctx.beginPath();
+        ctx.setLineDash([4, 6]);
+        ctx.moveTo(midX, 0);
+        ctx.lineTo(midX, height);
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.closePath();
+      }
+
+      // Physics Integration
+      if (isRunning) {
+        computeForces();
+        particles.forEach(p => p.update(0.6));
+      }
+
+      // Draw active magnetic chain links first (underneath beads)
+      if (selectedMode.startsWith('dipole')) {
+        drawChains();
+      }
+
+      // Render Particles
+      particles.forEach(p => p.draw());
+
+      // Metrics & Chart Logging
+      if (isRunning && step % 5 === 0) {
+        const instantS = computeTwoBinEntropy();
+        const deltaS_ideal = 2 * N * kB * Math.LN2;
+        const theoLimit = isIdenticalSystem() ? 0.0 : ((partitionOpen || hasEverOpened) ? deltaS_ideal : 0.0);
+
+        valInst.textContent = `${instantS.toFixed(2)} kB`;
+        if (selectedMode.startsWith('dipole')) {
+          valBoundary.textContent = `U_cross = ${currentCrossEnergy.toFixed(2)} ε`;
+        }
+
+        if (entropyChart.data.labels.length > 50) {
+          entropyChart.data.labels.shift();
+          entropyChart.data.datasets[0].data.shift();
+          entropyChart.data.datasets[1].data.shift();
+        }
+        entropyChart.data.labels.push('');
+        entropyChart.data.datasets[0].data.push(instantS);
+        entropyChart.data.datasets[1].data.push(theoLimit);
+        entropyChart.update();
+      }
+
+      if (isRunning) step++;
+      requestAnimationFrame(animate);
+    }
+
+    initParticles();
+    animate();
+  </script>
+</body>
+</html>

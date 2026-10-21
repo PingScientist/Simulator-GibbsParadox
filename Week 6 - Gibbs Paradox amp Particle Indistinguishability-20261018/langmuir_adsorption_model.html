@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Langmuir Adsorption & Gibbs Indistinguishability Paradox</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- OrbitControls for Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- MathJax 3 with TeX configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      startup: {
+        ready: () => {
+          MathJax.startup.defaultReady();
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    /* Glowing accents */
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 15px rgba(52, 211, 153, 0.25);
+    }
+    .glow-rose {
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+    }
+    /* Range sliders styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #1e293b;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-5">
+
+<div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+  
+  <!-- Header Bar -->
+  <header class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 backdrop-blur flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+          Langmuir Adsorption <span class="text-cyan-400 font-light">&amp;</span> Gibbs Indistinguishability
+        </h1>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1">
+        Comparing rigorous identical particle statistical mechanics ($1/N!$) with the unphysical distinguishable gas paradox.
+      </p>
+    </div>
+
+    <!-- Mode Toggle Switcher -->
+    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 self-start md:self-auto">
+      <button id="btnCorrect" onclick="setMode(true)" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 glow-emerald">
+        ✓ Correct Physics ($1/N!$)
+      </button>
+      <button id="btnWrong" onclick="setMode(false)" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-slate-200">
+        ✗ Wrong Physics (No $1/N!$)
+      </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+    
+    <!-- Controls Sidebar (4 cols) -->
+    <div class="lg:col-span-4 flex flex-col gap-3">
+      
+      <!-- Thermodynamic Parameter Controls -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-md flex flex-col gap-3.5">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between">
+          <span>State Variables</span>
+          <span id="badgeModel" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50">
+            Identical Quanta ($1/N!$)
+          </span>
+        </h2>
+
+        <!-- Chamber Volume (V) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400 font-medium">Chamber Volume ($V$ / Piston Height)</span>
+            <span id="labelV" class="text-cyan-400 font-mono font-bold">1.00 L</span>
+          </div>
+          <input type="range" id="inputV" min="0.5" max="3.0" step="0.05" value="1.00" class="w-full">
+          <span class="text-[10px] text-slate-500">Raises/lowers the 3D top piston ceiling in real-time.</span>
+        </div>
+
+        <!-- Gas Pressure (P) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400 font-medium">Gas Pressure ($P$)</span>
+            <span id="labelP" class="text-cyan-400 font-mono font-bold">1.00 atm</span>
+          </div>
+          <input type="range" id="inputP" min="0.1" max="4.0" step="0.05" value="1.00" class="w-full">
+          <span class="text-[10px] text-slate-500">Dictates gas collision frequency against the adsorption plane.</span>
+        </div>
+
+        <!-- Temperature (T) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400 font-medium">Temperature ($T$)</span>
+            <span id="labelT" class="text-cyan-400 font-mono font-bold">300 K</span>
+          </div>
+          <input type="range" id="inputT" min="150" max="500" step="10" value="300" class="w-full">
+          <span class="text-[10px] text-slate-500">Scales thermal velocities &amp; desorption exponential rates.</span>
+        </div>
+
+        <!-- Binding Energy (epsilon_0) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400 font-medium">Binding Energy ($\epsilon_0$)</span>
+            <span id="labelE" class="text-cyan-400 font-mono font-bold">18.0 kJ/mol</span>
+          </div>
+          <input type="range" id="inputE" min="10" max="30" step="0.5" value="18.0" class="w-full">
+          <span class="text-[10px] text-slate-500">Determines surface well depth &amp; residence time.</span>
+        </div>
+
+        <!-- Camera reset button -->
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+          <span class="text-xs text-slate-400">Orbit controls: Drag to rotate, scroll to zoom</span>
+          <button onclick="resetCamera()" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">
+            Reset View
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-Time Thermodynamic Readouts -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-md">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">System Observables</h2>
+        <div class="grid grid-cols-2 gap-2">
+          
+          <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Coverage ($\theta$)</span>
+            <span id="readoutTheta" class="text-lg font-bold font-mono text-cyan-400">0.000</span>
+          </div>
+
+          <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Adsorbed / Sites</span>
+            <span id="readoutSites" class="text-lg font-bold font-mono text-white">0 / 64</span>
+          </div>
+
+          <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Gas Chamber $N$</span>
+            <span id="readoutN" class="text-lg font-bold font-mono text-slate-300">0</span>
+          </div>
+
+          <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">$\mu_{\text{gas}}$ Relative</span>
+            <span id="readoutMu" class="text-lg font-bold font-mono text-emerald-400">0.00 $k_B T$</span>
+          </div>
+        </div>
+
+        <div id="readoutStatusBox" class="mt-3 p-2.5 rounded-lg border bg-emerald-950/40 border-emerald-800/60 text-emerald-300 text-xs flex items-center justify-between">
+          <span>Volume Invariance Check:</span>
+          <span id="readoutStatusTag" class="font-bold">PASSED ($\theta$ invariant to $V$)</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3D Visualization + Isotherm Chart Column (8 cols) -->
+    <div class="lg:col-span-8 flex flex-col gap-3">
+      
+      <!-- 3D Chamber Container -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-md relative overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between pb-2 mb-1 border-b border-slate-800 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-slate-200">3D Kinetic Gas Chamber</span>
+            <span class="text-[11px] text-slate-400">| Top: Moving Piston ($V$) | Bottom: 8×8 Adsorption Grid</span>
+          </div>
+          <div id="badgeParticleStyle" class="text-[10px] px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">
+            Particles: Identical Wavepackets
+          </div>
+        </div>
+
+        <!-- ThreeJS Canvas Container -->
+        <div id="threeContainer" class="w-full h-[340px] sm:h-[380px] rounded-lg overflow-hidden relative cursor-grab active:cursor-grabbing bg-slate-950">
+          <!-- Canvas will be dynamically sized and injected here -->
+        </div>
+      </div>
+
+      <!-- Linear Coordinate Chart (Coverage theta vs. Pressure P) -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-md flex flex-col">
+        <div class="flex items-center justify-between pb-2 mb-1 border-b border-slate-800 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-slate-200">Adsorption Isotherm: Coverage $\theta$ vs. Gas Pressure $P$</span>
+          </div>
+          <div class="flex items-center gap-3 text-[11px]">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-emerald-400 inline-block"></span> Correct ($1/N!$)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t border-dashed border-rose-400 inline-block"></span> Wrong (No $1/N!$)</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400 inline-block"></span> Current State</span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-[220px]">
+          <canvas id="isothermChartCanvas"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-lg">
+    <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+      <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+        <span>Statistical Mechanics Derivation: The Origin of the Paradox</span>
+      </h2>
+      <span class="text-xs text-slate-400">Comparing Free Energies &amp; Chemical Potentials</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      
+      <!-- Left Column: Correct Formulation -->
+      <div class="bg-emerald-950/20 border border-emerald-800/50 rounded-xl p-4 flex flex-col gap-2.5">
+        <div class="flex items-center justify-between border-b border-emerald-800/40 pb-1.5">
+          <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+            <span>✓ Correct Formulation (With $1/N!$ factor)</span>
+          </h3>
+          <span class="text-[10px] bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700/60 font-mono">
+            Extensive &amp; Physical
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-300">
+          Because classical gas particles are microstates of identical field quanta, permutations over phase space are physically identical. We must divide by $N!$:
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-emerald-300 overflow-x-auto">
+          $$Z_{\text{gas}} = \frac{1}{N!} z_1^N = \frac{1}{N!} \left( \frac{V}{\lambda^3} q_{\text{gas, int}} \right)^N$$
+        </div>
+
+        <p class="text-xs text-slate-300">
+          Using Stirling's approximation $\ln N! \approx N \ln N - N$, the Helmholtz free energy is strictly <strong>extensive</strong>:
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-emerald-300 overflow-x-auto">
+          $$F = -k_B T N \left[ \ln\left( \frac{V}{N \lambda^3} q_{\text{gas, int}} \right) + 1 \right]$$
+        </div>
+
+        <p class="text-xs text-slate-300">
+          The chemical potential naturally depends on particle density $n = N/V = P / k_B T$:
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-emerald-300 overflow-x-auto">
+          $$\mu_{\text{gas}} = \left(\frac{\partial F}{\partial N}\right)_{T,V} = k_B T \ln\left( \frac{N \lambda^3}{V q_{\text{gas, int}}} \right) = k_B T \ln\left( \frac{P \lambda^3}{k_B T q_{\text{gas, int}}} \right)$$
+        </div>
+
+        <div class="text-xs bg-emerald-900/20 border border-emerald-700/40 p-2 rounded text-emerald-200 leading-relaxed">
+          <strong>Outcome:</strong> Equating $\mu_{\text{gas}} = \mu_{\text{surface}}$ yields the classical Langmuir formula:
+          $$\theta = \frac{P}{P + P_L(T)}, \quad \text{where } P_L(T) = \frac{k_B T}{\lambda^3} \frac{q_{\text{gas, int}}}{q_{\text{internal}}} e^{-\epsilon_0 / k_B T}$$
+          Coverage $\theta$ depends <strong>exclusively on intensive pressure $P$</strong>. Doubling container volume $V$ at fixed $P$ changes nothing!
+        </div>
+      </div>
+
+      <!-- Right Column: Wrong Formulation -->
+      <div class="bg-rose-950/20 border border-rose-800/50 rounded-xl p-4 flex flex-col gap-2.5">
+        <div class="flex items-center justify-between border-b border-rose-800/40 pb-1.5">
+          <h3 class="text-sm font-bold text-rose-400 flex items-center gap-1.5">
+            <span>✗ Wrong Formulation (Distinguishable: No $1/N!$)</span>
+          </h3>
+          <span class="text-[10px] bg-rose-900/60 text-rose-300 px-2 py-0.5 rounded border border-rose-700/60 font-mono">
+            Gibbs' Paradox
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-300">
+          If particles are treated as classically distinguishable entities with continuous trackable IDs, the product partition function lacks $1/N!$:
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-rose-300 overflow-x-auto">
+          $$Z_{\text{gas}}^{\text{wrong}} = z_1^N = \left( \frac{V}{\lambda^3} q_{\text{gas, int}} \right)^N$$
+        </div>
+
+        <p class="text-xs text-slate-300">
+          The resulting free energy fails to be extensive ($F(2N, 2V) \ne 2F(N, V)$):
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-rose-300 overflow-x-auto">
+          $$F^{\text{wrong}} = -N k_B T \ln\left( \frac{V}{\lambda^3} q_{\text{gas, int}} \right)$$
+        </div>
+
+        <p class="text-xs text-slate-300">
+          Differentiating with respect to $N$ leaves an expression with <strong>zero dependence on $N$ or $P$</strong>:
+        </p>
+
+        <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80 font-mono text-[11px] text-rose-300 overflow-x-auto">
+          $$\mu_{\text{gas}}^{\text{wrong}} = -k_B T \ln\left( \frac{V}{\lambda^3} q_{\text{gas, int}} \right)$$
+        </div>
+
+        <div class="text-xs bg-rose-900/20 border border-rose-700/40 p-2 rounded text-rose-200 leading-relaxed">
+          <strong>The Fatal Paradox:</strong> Equating $\mu_{\text{gas}}^{\text{wrong}} = \mu_{\text{surface}}$ yields:
+          $$\frac{\theta}{1 - \theta} = \frac{\lambda^3 q_{\text{internal}}}{V q_{\text{gas, int}}} \implies \theta = \frac{1}{1 + \frac{V}{\lambda^3} \frac{q_{\text{gas, int}}}{q_{\text{internal}}}}$$
+          The coverage $\theta$ is <strong>independent of pressure $P$ (completely flat curve)</strong> and is falsely governed by the box volume $V$! Moving a gas into a larger container strips molecules from the surface even if pressure is unchanged.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // --- Simulation Parameters & Global State ---
+  let isCorrectMode = true;
+  let params = {
+    V: 1.00,  // Liters (maps to piston height in 3D: 0.5 to 3.0)
+    P: 1.00,  // atm (0.1 to 4.0)
+    T: 300,   // Kelvin (150 to 500)
+    E: 18.0   // kJ/mol (10 to 30)
+  };
+
+  const R_GAS = 8.314e-3; // kJ / (mol K)
+
+  function computeTheoreticalCoverage(P, V, T, E, correctMode) {
+    const beta = 1.0 / (R_GAS * T);
+    const q_internal = Math.exp(beta * (E - 18.0) * 0.35);
+
+    if (correctMode) {
+      // Langmuir: P_L is around ~1.2 atm at 300K, E=18 kJ/mol
+      const P_L = (1.2 * Math.pow(T / 300, 2.5)) / q_internal;
+      return P / (P + P_L);
+    } else {
+      // Distinguishable: No P dependence, scales purely with 1/V
+      const ratio = (0.9 * Math.pow(300 / T, 1.5) * q_internal) / V;
+      const theta = ratio / (1.0 + ratio);
+      return Math.min(Math.max(theta, 0.02), 0.98);
+    }
+  }
+
+  function computeRelativeMu(P, V, T, correctMode) {
+    if (correctMode) {
+      return Math.log(P);
+    } else {
+      return -Math.log(V);
+    }
+  }
+
+  // --- Chart.js Setup with True Linear Coordinate System ---
+  let isothermChart = null;
+
+  function initChart() {
+    const ctx = document.getElementById('isothermChartCanvas').getContext('2d');
+    
+    isothermChart = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Correct (1/N!): θ = P / (P + P_L)',
+            data: [],
+            showLine: true,
+            borderColor: '#34d399',
+            borderWidth: 2.5,
+            pointRadius: 0,
+            fill: false,
+            tension: 0.2
+          },
+          {
+            label: 'Wrong (Distinguishable): Independent of P',
+            data: [],
+            showLine: true,
+            borderColor: '#fb7185',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false
+          },
+          {
+            label: 'Current State (P, θ)',
+            data: [],
+            showLine: false,
+            pointRadius: 7,
+            pointHoverRadius: 9,
+            pointBackgroundColor: '#38bdf8',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 0
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            min: 0,
+            max: 4.0,
+            title: {
+              display: true,
+              text: 'Gas Pressure P (atm)',
+              color: '#94a3b8',
+              font: { size: 11, weight: 'bold' }
+            },
+            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+            ticks: { color: '#94a3b8', stepSize: 0.5 }
+          },
+          y: {
+            type: 'linear',
+            min: 0,
+            max: 1.05,
+            title: {
+              display: true,
+              text: 'Surface Coverage θ',
+              color: '#94a3b8',
+              font: { size: 11, weight: 'bold' }
+            },
+            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+            ticks: { color: '#94a3b8', stepSize: 0.2 }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            titleColor: '#38bdf8',
+            bodyColor: '#f1f5f9',
+            borderColor: '#334155',
+            borderWidth: 1,
+            callbacks: {
+              label: (context) => `P: ${context.parsed.x.toFixed(2)} atm, θ: ${context.parsed.y.toFixed(3)}`
+            }
+          }
+        }
+      }
+    });
+
+    updateChartData();
+  }
+
+  function updateChartData() {
+    if (!isothermChart) return;
+
+    const correctPoints = [];
+    const wrongPoints = [];
+
+    for (let p = 0.05; p <= 4.0; p += 0.05) {
+      const thetaCorrect = computeTheoreticalCoverage(p, params.V, params.T, params.E, true);
+      const thetaWrong = computeTheoreticalCoverage(p, params.V, params.T, params.E, false);
+      correctPoints.push({ x: p, y: thetaCorrect });
+      wrongPoints.push({ x: p, y: thetaWrong });
+    }
+
+    const currentTheta = computeTheoreticalCoverage(params.P, params.V, params.T, params.E, isCorrectMode);
+    const activePoint = [{ x: params.P, y: currentTheta }];
+
+    isothermChart.data.datasets[0].data = correctPoints;
+    isothermChart.data.datasets[1].data = wrongPoints;
+    isothermChart.data.datasets[2].data = activePoint;
+    
+    isothermChart.data.datasets[2].pointBackgroundColor = isCorrectMode ? '#38bdf8' : '#f43f5e';
+
+    isothermChart.update('none');
+  }
+
+  // --- Three.js 3D kinetic gas chamber and planar grid ---
+  let scene, camera, renderer, controls;
+  const container = document.getElementById('threeContainer');
+
+  const CHAMBER_WIDTH = 12;
+  const CHAMBER_DEPTH = 12;
+  const MIN_PISTON_Y = 3.0;
+  const MAX_PISTON_Y = 13.0;
+  const FLOOR_Y = 0;
+
+  const GRID_SIZE = 8;
+  const TOTAL_SITES = GRID_SIZE * GRID_SIZE;
+  const siteMeshes = [];
+  const siteStates = [];
+
+  const gasParticles = [];
+  let pistonMesh, pistonRodMesh;
+
+  const badgeTextureCache = {};
+  function getBadgeTexture(id) {
+    if (badgeTextureCache[id]) return badgeTextureCache[id];
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = 'rgba(244, 63, 94, 0.85)';
+    ctx.roundRect(4, 4, 56, 24, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 15px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('#' + id, 32, 17);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    badgeTextureCache[id] = texture;
+    return texture;
+  }
+
+  function initThree() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x060913);
+
+    const aspect = container.clientWidth / container.clientHeight;
+    camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+    camera.position.set(16, 14, 18);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 4.5, 0);
+    controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0x38bdf8, 0.8);
+    dirLight.position.set(10, 20, 10);
+    scene.add(dirLight);
+
+    const floorLight = new THREE.PointLight(0x34d399, 1.2, 20);
+    floorLight.position.set(0, 2, 0);
+    scene.add(floorLight);
+
+    const floorGeo = new THREE.BoxGeometry(CHAMBER_WIDTH + 1, 0.4, CHAMBER_DEPTH + 1);
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.4,
+      metalness: 0.2
+    });
+    const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+    floorMesh.position.y = -0.2;
+    scene.add(floorMesh);
+
+    const floorGrid = new THREE.GridHelper(CHAMBER_WIDTH, GRID_SIZE, 0x334155, 0x1e293b);
+    floorGrid.position.y = 0.01;
+    scene.add(floorGrid);
+
+    const pillarGeo = new THREE.CylinderGeometry(0.08, 0.08, 16);
+    const pillarMat = new THREE.MeshBasicMaterial({ color: 0x334155 });
+    
+    [[-1,-1], [-1,1], [1,-1], [1,1]].forEach(([sx, sz]) => {
+      const p = new THREE.Mesh(pillarGeo, pillarMat);
+      p.position.set(sx * CHAMBER_WIDTH / 2, 8, sz * CHAMBER_DEPTH / 2);
+      scene.add(p);
+    });
+
+    const pistonGeo = new THREE.BoxGeometry(CHAMBER_WIDTH, 0.5, CHAMBER_DEPTH);
+    const pistonMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.8,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.85
+    });
+    pistonMesh = new THREE.Mesh(pistonGeo, pistonMat);
+    scene.add(pistonMesh);
+
+    const rodGeo = new THREE.CylinderGeometry(0.35, 0.35, 8);
+    const rodMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9, roughness: 0.2 });
+    pistonRodMesh = new THREE.Mesh(rodGeo, rodMat);
+    scene.add(pistonRodMesh);
+
+    initAdsorptionSites();
+    window.addEventListener('resize', onWindowResize);
+  }
+
+  function getPistonHeight() {
+    const norm = (params.V - 0.5) / (3.0 - 0.5);
+    return MIN_PISTON_Y + norm * (MAX_PISTON_Y - MIN_PISTON_Y);
+  }
+
+  function updatePistonPosition() {
+    const py = getPistonHeight();
+    pistonMesh.position.y = py;
+    pistonRodMesh.position.y = py + 4;
+  }
+
+  function initAdsorptionSites() {
+    const spacing = CHAMBER_WIDTH / (GRID_SIZE + 1);
+    const half = (GRID_SIZE - 1) / 2;
+
+    const siteGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.08, 16);
+
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const x = (c - half) * spacing;
+        const z = (r - half) * spacing;
+
+        const siteMat = new THREE.MeshStandardMaterial({
+          color: 0x1e293b,
+          roughness: 0.5,
+          emissive: 0x0f172a
+        });
+
+        const mesh = new THREE.Mesh(siteGeo, siteMat);
+        mesh.position.set(x, 0.04, z);
+        scene.add(mesh);
+
+        siteMeshes.push(mesh);
+        siteStates.push({
+          x: x,
+          z: z,
+          occupied: false,
+          boundMesh: null,
+          residenceTimer: 0
+        });
+      }
+    }
+  }
+
+  // --- Particle Dynamics & Adsorption Monte-Carlo ---
+  const particleGeo = new THREE.SphereGeometry(0.22, 16, 16);
+  const particleMatCorrect = new THREE.MeshStandardMaterial({
+    color: 0x38bdf8,
+    emissive: 0x0284c7,
+    roughness: 0.2,
+    metalness: 0.8
+  });
+  const particleMatWrong = new THREE.MeshStandardMaterial({
+    color: 0xf43f5e,
+    emissive: 0xbe123c,
+    roughness: 0.2,
+    metalness: 0.8
+  });
+
+  function syncGasParticleCount() {
+    const targetCount = Math.floor(params.P * params.V * 40 * (300 / params.T));
+    const pistonY = getPistonHeight();
+
+    while (gasParticles.length < targetCount) {
+      const mesh = new THREE.Mesh(particleGeo, isCorrectMode ? particleMatCorrect : particleMatWrong);
+      
+      const x = (Math.random() - 0.5) * (CHAMBER_WIDTH - 1.2);
+      const z = (Math.random() - 0.5) * (CHAMBER_DEPTH - 1.2);
+      const y = Math.random() * (pistonY - 1.2) + 0.6;
+      mesh.position.set(x, y, z);
+
+      const speed = 0.08 * Math.sqrt(params.T / 300);
+      const theta = Math.random() * Math.PI * 2;
+      const phi = (Math.random() - 0.5) * Math.PI;
+
+      const vx = speed * Math.cos(theta) * Math.cos(phi);
+      const vy = speed * Math.sin(phi);
+      const vz = speed * Math.sin(theta) * Math.cos(phi);
+
+      const idNumber = Math.floor(Math.random() * 900) + 100;
+      const badgeMat = new THREE.SpriteMaterial({
+        map: getBadgeTexture(idNumber),
+        transparent: true
+      });
+      const badgeSprite = new THREE.Sprite(badgeMat);
+      badgeSprite.scale.set(0.9, 0.45, 1);
+      badgeSprite.position.set(0, 0.45, 0);
+      badgeSprite.visible = !isCorrectMode;
+      mesh.add(badgeSprite);
+
+      scene.add(mesh);
+
+      gasParticles.push({
+        mesh: mesh,
+        badge: badgeSprite,
+        id: idNumber,
+        vx: vx,
+        vy: vy,
+        vz: vz
+      });
+    }
+
+    while (gasParticles.length > targetCount) {
+      const p = gasParticles.pop();
+      scene.remove(p.mesh);
+    }
+  }
+
+  function updateVisualMaterials() {
+    const mat = isCorrectMode ? particleMatCorrect : particleMatWrong;
+    
+    gasParticles.forEach(p => {
+      p.mesh.material = mat;
+      p.badge.visible = !isCorrectMode;
+    });
+
+    siteStates.forEach(s => {
+      if (s.boundMesh) {
+        s.boundMesh.material = mat;
+        if (s.boundMesh.children.length > 0) {
+          s.boundMesh.children[0].visible = !isCorrectMode;
+        }
+      }
+    });
+
+    const badgeStyle = document.getElementById('badgeParticleStyle');
+    if (isCorrectMode) {
+      badgeStyle.textContent = "Particles: Identical Wavepackets (No IDs)";
+      badgeStyle.className = "text-[10px] px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300";
+    } else {
+      badgeStyle.textContent = "Particles: Distinguishable Entities (Numbered Badges)";
+      badgeStyle.className = "text-[10px] px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-300";
+    }
+  }
+
+  // --- KINETIC SIMULATION STEP WITH PHYSICAL DETAILED BALANCE ---
+  function updatePhysics() {
+    const pistonY = getPistonHeight();
+    updatePistonPosition();
+
+    const halfW = (CHAMBER_WIDTH - 0.6) / 2;
+    const halfD = (CHAMBER_DEPTH - 0.6) / 2;
+    const targetTheta = computeTheoreticalCoverage(params.P, params.V, params.T, params.E, isCorrectMode);
+
+    // 1. Desorption step (thermal kick-off)
+    // Rate scales with temperature and (1 - targetTheta)
+    const k_desorb_base = 0.025 * (1.0 - targetTheta) * Math.sqrt(params.T / 300);
+
+    siteStates.forEach((site, idx) => {
+      if (site.occupied) {
+        site.residenceTimer++;
+        if (Math.random() < k_desorb_base && site.residenceTimer > 15) {
+          site.occupied = false;
+          siteMeshes[idx].material.color.setHex(0x1e293b);
+          siteMeshes[idx].material.emissive.setHex(0x0f172a);
+
+          if (site.boundMesh) {
+            scene.remove(site.boundMesh);
+            site.boundMesh = null;
+          }
+
+          // Launch desorbed particle back into gas
+          const mesh = new THREE.Mesh(particleGeo, isCorrectMode ? particleMatCorrect : particleMatWrong);
+          mesh.position.set(site.x, 0.35, site.z);
+
+          const idNumber = Math.floor(Math.random() * 900) + 100;
+          const badgeMat = new THREE.SpriteMaterial({ map: getBadgeTexture(idNumber), transparent: true });
+          const badgeSprite = new THREE.Sprite(badgeMat);
+          badgeSprite.scale.set(0.9, 0.45, 1);
+          badgeSprite.position.set(0, 0.45, 0);
+          badgeSprite.visible = !isCorrectMode;
+          mesh.add(badgeSprite);
+
+          scene.add(mesh);
+          gasParticles.push({
+            mesh: mesh,
+            badge: badgeSprite,
+            id: idNumber,
+            vx: (Math.random() - 0.5) * 0.06,
+            vy: Math.random() * 0.08 + 0.05,
+            vz: (Math.random() - 0.5) * 0.06
+          });
+        }
+      }
+    });
+
+    // 2. Collision & Sticking step
+    // Sticking probability per hit:
+    // In Correct mode: constant physical sticking coefficient (~0.75).
+    // In Wrong mode: scaled by 1 / (P * V) so collision frequency does not increase coverage!
+    const stickingProb = isCorrectMode 
+      ? 0.75 
+      : Math.min(0.75 * (1.0 / (params.P * params.V)), 0.95);
+
+    for (let i = gasParticles.length - 1; i >= 0; i--) {
+      const p = gasParticles[i];
+      p.mesh.position.x += p.vx;
+      p.mesh.position.y += p.vy;
+      p.mesh.position.z += p.vz;
+
+      // Wall reflections
+      if (p.mesh.position.x < -halfW) { p.mesh.position.x = -halfW; p.vx *= -1; }
+      if (p.mesh.position.x > halfW)  { p.mesh.position.x = halfW;  p.vx *= -1; }
+      if (p.mesh.position.z < -halfD) { p.mesh.position.z = -halfD; p.vz *= -1; }
+      if (p.mesh.position.z > halfD)  { p.mesh.position.z = halfD;  p.vz *= -1; }
+
+      // Piston ceiling reflection
+      if (p.mesh.position.y > pistonY - 0.35) {
+        p.mesh.position.y = pistonY - 0.35;
+        p.vy = -Math.abs(p.vy);
+      }
+
+      // Bottom plane collision
+      if (p.mesh.position.y <= 0.25) {
+        let adsorbed = false;
+
+        // Check for an available localized site nearby
+        for (let sIdx = 0; sIdx < siteStates.length; sIdx++) {
+          const site = siteStates[sIdx];
+          if (!site.occupied) {
+            const dx = site.x - p.mesh.position.x;
+            const dz = site.z - p.mesh.position.z;
+            if (dx * dx + dz * dz < 0.5) {
+              if (Math.random() < stickingProb) {
+                site.occupied = true;
+                site.residenceTimer = 0;
+                adsorbed = true;
+
+                siteMeshes[sIdx].material.color.setHex(0x0284c7);
+                siteMeshes[sIdx].material.emissive.setHex(0x0369a1);
+
+                const boundMesh = new THREE.Mesh(particleGeo, isCorrectMode ? particleMatCorrect : particleMatWrong);
+                boundMesh.position.set(site.x, 0.28, site.z);
+
+                const badgeMat = new THREE.SpriteMaterial({ map: getBadgeTexture(p.id), transparent: true });
+                const badgeSprite = new THREE.Sprite(badgeMat);
+                badgeSprite.scale.set(0.9, 0.45, 1);
+                badgeSprite.position.set(0, 0.45, 0);
+                badgeSprite.visible = !isCorrectMode;
+                boundMesh.add(badgeSprite);
+
+                scene.add(boundMesh);
+                site.boundMesh = boundMesh;
+
+                // Particle is captured from the gas phase
+                scene.remove(p.mesh);
+                gasParticles.splice(i, 1);
+                break;
+              }
+            }
+          }
+        }
+
+        // If not adsorbed, bounce elastically
+        if (!adsorbed) {
+          p.mesh.position.y = 0.25;
+          p.vy = Math.abs(p.vy);
+        }
+      }
+    }
+
+    // 3. Jitter bound particles (phonons)
+    siteStates.forEach(s => {
+      if (s.boundMesh) {
+        const jitter = (Math.random() - 0.5) * 0.015 * Math.sqrt(params.T / 300);
+        s.boundMesh.position.x = s.x + jitter;
+        s.boundMesh.position.z = s.z + jitter;
+      }
+    });
+
+    // 4. Update UI Metrics
+    const occupiedCount = siteStates.filter(s => s.occupied).length;
+    const currentTheta = occupiedCount / TOTAL_SITES;
+    const relMu = computeRelativeMu(params.P, params.V, params.T, isCorrectMode);
+
+    document.getElementById('readoutTheta').textContent = currentTheta.toFixed(3);
+    document.getElementById('readoutSites').textContent = `${occupiedCount} / ${TOTAL_SITES}`;
+    document.getElementById('readoutN').textContent = gasParticles.length + occupiedCount;
+    document.getElementById('readoutMu').textContent = `${relMu >= 0 ? '+' : ''}${relMu.toFixed(2)} kBT`;
+
+    const statusBox = document.getElementById('readoutStatusBox');
+    const statusTag = document.getElementById('readoutStatusTag');
+    if (isCorrectMode) {
+      statusBox.className = "mt-3 p-2.5 rounded-lg border bg-emerald-950/40 border-emerald-800/60 text-emerald-300 text-xs flex items-center justify-between";
+      statusTag.textContent = "PASSED (Invariant to V)";
+    } else {
+      statusBox.className = "mt-3 p-2.5 rounded-lg border bg-rose-950/40 border-rose-800/60 text-rose-300 text-xs flex items-center justify-between";
+      statusTag.textContent = "PARADOX! (Falsely V-dependent)";
+    }
+  }
+
+  function resetCamera() {
+    camera.position.set(16, 14, 18);
+    controls.target.set(0, 4.5, 0);
+    controls.update();
+  }
+
+  function onWindowResize() {
+    if (!renderer || !container) return;
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  }
+
+  function setMode(correct) {
+    isCorrectMode = correct;
+    
+    const btnC = document.getElementById('btnCorrect');
+    const btnW = document.getElementById('btnWrong');
+    const badgeModel = document.getElementById('badgeModel');
+
+    if (isCorrectMode) {
+      btnC.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 glow-emerald";
+      btnW.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-slate-200 border border-transparent";
+      badgeModel.textContent = "Identical Quanta (1/N!)";
+      badgeModel.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50";
+    } else {
+      btnW.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-rose-500/20 text-rose-300 border border-rose-500/40 glow-rose";
+      btnC.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-slate-200 border border-transparent";
+      badgeModel.textContent = "Distinguishable (No 1/N!)";
+      badgeModel.className = "text-[11px] px-2 py-0.5 rounded-full bg-rose-900/60 text-rose-300 border border-rose-700/50";
+    }
+
+    updateVisualMaterials();
+    updateChartData();
+  }
+
+  // Slider event listeners
+  document.getElementById('inputV').addEventListener('input', (e) => {
+    params.V = parseFloat(e.target.value);
+    document.getElementById('labelV').textContent = params.V.toFixed(2) + ' L';
+    syncGasParticleCount();
+    updateChartData();
+  });
+
+  document.getElementById('inputP').addEventListener('input', (e) => {
+    params.P = parseFloat(e.target.value);
+    document.getElementById('labelP').textContent = params.P.toFixed(2) + ' atm';
+    syncGasParticleCount();
+    updateChartData();
+  });
+
+  document.getElementById('inputT').addEventListener('input', (e) => {
+    params.T = parseFloat(e.target.value);
+    document.getElementById('labelT').textContent = params.T.toFixed(0) + ' K';
+    syncGasParticleCount();
+    updateChartData();
+  });
+
+  document.getElementById('inputE').addEventListener('input', (e) => {
+    params.E = parseFloat(e.target.value);
+    document.getElementById('labelE').textContent = params.E.toFixed(1) + ' kJ/mol';
+    updateChartData();
+  });
+
+  // --- Animation Loop ---
+  function renderLoop() {
+    requestAnimationFrame(renderLoop);
+    updatePhysics();
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  // --- Initialization on Load ---
+  window.addEventListener('DOMContentLoaded', () => {
+    initThree();
+    syncGasParticleCount();
+    initChart();
+    renderLoop();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Extensive Property: Entropy and Particle Number Proportionality</title>
+  <!-- Configure MathJax 3 with support for both $...$ and \(...\) delimiters -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 16px;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    h2 { margin: 6px 0 4px 0; letter-spacing: -0.02em; }
+    p.subtitle { 
+      color: #94a3b8; 
+      margin: 0 0 16px 0; 
+      font-size: 0.95rem; 
+      text-align: center;
+    }
+    .layout {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .canvas-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    canvas {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 8px;
+    }
+    .panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px 20px;
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    input[type=range] {
+      width: 100%;
+      accent-color: #38bdf8;
+      cursor: pointer;
+    }
+    .btn-row { display: flex; gap: 8px; }
+    .btn {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #1d4ed8; }
+    .btn.alt { background: #475569; }
+    .btn.alt:hover { background: #334155; }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+      padding: 4px 0;
+      font-size: 0.88rem;
+    }
+    .stat-val { font-family: monospace; font-weight: 600; color: #38bdf8; }
+    .highlight { color: #4ade80; font-size: 1.05rem; }
+    .note-box {
+      font-size: 0.83rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+      background: #0f172a;
+      border-left: 3px solid #38bdf8;
+      padding: 10px 12px;
+      border-radius: 4px;
+    }
+    .note-box b { color: #f1f5f9; }
+    ol { margin: 6px 0 0 0; padding-left: 18px; }
+    li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+  <h2>Proportionality of Entropy and Particle Number: $S \propto N$</h2>
+  <p class="subtitle">
+    Full Thermodynamic Equation: 
+    $$S(T, P, N) = N \left[ s_0 + c_P \ln\left(\frac{T}{T_0}\right) - k_{\text{B}} \ln\left(\frac{P}{P_0}\right) \right]$$
+  </p>
+
+  <div class="layout">
+    <div class="canvas-group">
+      <!-- Gas Chamber Canvas -->
+      <canvas id="gasCanvas" width="560" height="230"></canvas>
+      <!-- Real-time Plot Canvas -->
+      <canvas id="plotCanvas" width="560" height="230"></canvas>
+    </div>
+
+    <div class="panel">
+      <div class="control-row">
+        <div class="slider-header">
+          <span><b>Primary Control:</b> Particle Number $N$</span>
+          <span id="sliderDisp" class="stat-val">60</span>
+        </div>
+        <input type="range" id="nSlider" min="20" max="180" value="60" oninput="onSliderChange(this.value)">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="perturbPiston(-50)">← Compress</button>
+        <button class="btn" onclick="perturbPiston(50)">Expand →</button>
+        <button class="btn alt" onclick="resetSim()">Reset</button>
+      </div>
+
+      <div class="stat-row">
+        <span>Fixed Temperature $T$:</span>
+        <span class="stat-val">300 K</span>
+      </div>
+      <div class="stat-row">
+        <span>Reference Pressure $P_0$:</span>
+        <span class="stat-val">1.00 atm</span>
+      </div>
+      <div class="stat-row">
+        <span>Instantaneous Pressure $P$:</span>
+        <span class="stat-val" id="pressVal">1.00 atm</span>
+      </div>
+      <div class="stat-row">
+        <span>Chamber Volume $V$:</span>
+        <span class="stat-val" id="volVal">1.00 V₀</span>
+      </div>
+      <div class="stat-row">
+        <span>Isobaric Baseline $S_{\text{eq}}$:</span>
+        <span class="stat-val" id="eqEntropyVal">1.00 S₀</span>
+      </div>
+      <div class="stat-row" style="border-bottom: none;">
+        <span>Real Instantaneous $S$:</span>
+        <span class="stat-val highlight" id="entropyVal">1.00 S₀</span>
+      </div>
+
+      <div class="note-box">
+        <b>Core Physical Principle ($S \propto N$):</b>
+        <p style="margin: 3px 0 6px 0;">
+          At fixed $T$ and $P$, each particle contributes an invariant specific entropy $s(T, P)$. Therefore, changing $N$ moves the system directly along the linear diagonal line $S = N \cdot s(T, P)$.
+        </p>
+        <b>Piston Dragging (Non-equilibrium Effect):</b>
+        <ol>
+          <li><b>Drag piston left:</b> $P > P_0$, suppressing volume states; $S$ drops <b>below</b> the line ($S < S_{\text{eq}}$).</li>
+          <li><b>Drag piston right:</b> $P < P_0$, adding positional volume states; $S$ rises <b>above</b> the line ($S > S_{\text{eq}}$).</li>
+          <li><b>Release piston:</b> Internal pressure naturally restores to $P_0$, relaxing $S$ directly back onto the proportional line $S \propto N$.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gasCanvas = document.getElementById("gasCanvas");
+    const gCtx = gasCanvas.getContext("2d");
+    const plotCanvas = document.getElementById("plotCanvas");
+    const pCtx = plotCanvas.getContext("2d");
+
+    const baseN = 60;
+    const basePistonX = 180;
+    let targetN = 60;
+    let currentN = 60;
+
+    let pistonX = basePistonX;
+    let pistonVx = 0;
+    let isDraggingPiston = false;
+
+    const speed = 2.4;
+    let particles = [];
+    let sparks = [];
+
+    // Let s0 = 2.5 * kB for visualization scaling so S stays positive
+    const s0_over_kB = 2.5;
+
+    class Particle {
+      constructor(maxX) {
+        this.radius = 3.5;
+        this.x = 8 + Math.random() * (maxX - 16);
+        this.y = 8 + Math.random() * (gasCanvas.height - 16);
+        const theta = Math.random() * 2 * Math.PI;
+        this.vx = Math.cos(theta) * speed;
+        this.vy = Math.sin(theta) * speed;
+      }
+      update(currentPistonX) {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.y - this.radius <= 0) { this.y = this.radius; this.vy = -this.vy; }
+        if (this.y + this.radius >= gasCanvas.height) { this.y = gasCanvas.height - this.radius; this.vy = -this.vy; }
+        if (this.x - this.radius <= 0) { this.x = this.radius; this.vx = -this.vx; }
+
+        if (this.x + this.radius >= currentPistonX) {
+          this.x = currentPistonX - this.radius;
+          this.vx = -Math.abs(this.vx);
+
+          if (sparks.length < 25) {
+            sparks.push({
+              x: currentPistonX,
+              y: this.y,
+              life: 1.0,
+              dx: -(Math.random() * 2 + 1),
+              dy: (Math.random() - 0.5) * 2
+            });
+          }
+        }
+      }
+      draw() {
+        gCtx.beginPath();
+        gCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        gCtx.fillStyle = "#38bdf8";
+        gCtx.fill();
+      }
+    }
+
+    function initGas(n) {
+      particles = [];
+      for (let i = 0; i < n; i++) {
+        particles.push(new Particle(pistonX));
+      }
+    }
+    initGas(baseN);
+
+    function onSliderChange(val) {
+      targetN = parseInt(val);
+      document.getElementById("sliderDisp").innerText = targetN;
+    }
+
+    function perturbPiston(dx) {
+      pistonX = Math.max(50, Math.min(gasCanvas.width - 50, pistonX + dx));
+    }
+
+    function resetSim() {
+      document.getElementById("nSlider").value = baseN;
+      onSliderChange(baseN);
+      pistonX = basePistonX;
+      pistonVx = 0;
+    }
+
+    // Interactive mouse dragging
+    gasCanvas.addEventListener("mousedown", (e) => {
+      const rect = gasCanvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      if (Math.abs(mouseX - pistonX) < 30) {
+        isDraggingPiston = true;
+      }
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDraggingPiston) return;
+      const rect = gasCanvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      pistonX = Math.max(60, Math.min(gasCanvas.width - 35, mouseX));
+      pistonVx = 0;
+    });
+
+    window.addEventListener("mouseup", () => {
+      isDraggingPiston = false;
+    });
+
+    function drawPressureGauge(x, y, pRatio) {
+      const radius = 24;
+      gCtx.save();
+      gCtx.translate(x, y);
+
+      gCtx.fillStyle = "#1e293b";
+      gCtx.beginPath();
+      gCtx.arc(0, 0, radius, 0, Math.PI * 2);
+      gCtx.fill();
+      gCtx.strokeStyle = "#475569";
+      gCtx.lineWidth = 2;
+      gCtx.stroke();
+
+      const angle = -Math.PI / 2 + Math.max(-1.4, Math.min(1.4, (pRatio - 1.0) * 1.5));
+      gCtx.strokeStyle = Math.abs(pRatio - 1.0) > 0.1 ? "#f43f5e" : "#4ade80";
+      gCtx.lineWidth = 2.2;
+      gCtx.beginPath();
+      gCtx.moveTo(0, 0);
+      gCtx.lineTo(Math.cos(angle) * (radius - 5), Math.sin(angle) * (radius - 5));
+      gCtx.stroke();
+
+      gCtx.beginPath();
+      gCtx.arc(0, 0, 3, 0, Math.PI * 2);
+      gCtx.fillStyle = "#e2e8f0";
+      gCtx.fill();
+
+      gCtx.fillStyle = "#94a3b8";
+      gCtx.font = "9px sans-serif";
+      gCtx.fillText("P Gauge", -18, radius + 11);
+      gCtx.restore();
+    }
+
+    function renderPlot(curN, curS, eqS) {
+      pCtx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
+      const margin = { top: 32, right: 35, bottom: 42, left: 65 };
+      const w = plotCanvas.width - margin.left - margin.right;
+      const h = plotCanvas.height - margin.top - margin.bottom;
+
+      const maxN = 200;
+      const maxS = 3.5;
+
+      // Coordinate axes
+      pCtx.strokeStyle = "#475569";
+      pCtx.lineWidth = 1.5;
+      pCtx.beginPath();
+      pCtx.moveTo(margin.left, margin.top);
+      pCtx.lineTo(margin.left, margin.top + h);
+      pCtx.lineTo(margin.left + w, margin.top + h);
+      pCtx.stroke();
+
+      // Axis labels
+      pCtx.fillStyle = "#94a3b8";
+      pCtx.font = "12px sans-serif";
+      pCtx.fillText("Particle Number N", margin.left + w / 2 - 50, plotCanvas.height - 12);
+
+      pCtx.save();
+      pCtx.translate(18, margin.top + h / 2 + 35);
+      pCtx.rotate(-Math.PI / 2);
+      pCtx.fillText("Entropy S (S₀ units)", 0, 0);
+      pCtx.restore();
+
+      // Grid Ticks
+      [50, 100, 150, 200].forEach(nVal => {
+        const tx = margin.left + (nVal / maxN) * w;
+        pCtx.strokeStyle = "#334155";
+        pCtx.beginPath();
+        pCtx.moveTo(tx, margin.top);
+        pCtx.lineTo(tx, margin.top + h);
+        pCtx.stroke();
+        pCtx.fillStyle = "#64748b";
+        pCtx.font = "10px monospace";
+        pCtx.fillText(nVal, tx - 10, margin.top + h + 15);
+      });
+
+      [1.0, 2.0, 3.0].forEach(sVal => {
+        const ty = margin.top + h - (sVal / maxS) * h;
+        pCtx.strokeStyle = "#334155";
+        pCtx.beginPath();
+        pCtx.moveTo(margin.left, ty);
+        pCtx.lineTo(margin.left + w, ty);
+        pCtx.stroke();
+        pCtx.fillStyle = "#64748b";
+        pCtx.font = "10px monospace";
+        pCtx.fillText(sVal.toFixed(1), margin.left - 30, ty + 3);
+      });
+
+      // Linear proportionality line: S = N * s(T, P)
+      pCtx.strokeStyle = "#38bdf8";
+      pCtx.lineWidth = 2.2;
+      pCtx.beginPath();
+      pCtx.moveTo(margin.left, margin.top + h);
+      pCtx.lineTo(margin.left + w, margin.top + h - ((maxN / baseN) / maxS) * h);
+      pCtx.stroke();
+
+      // Core concept annotation
+      pCtx.fillStyle = "#38bdf8";
+      pCtx.font = "bold 11px monospace";
+      pCtx.fillText("Primary Line: S = N · s(T, P₀)  [S ∝ N]", margin.left + 15, margin.top + 15);
+
+      const curX = margin.left + (curN / maxN) * w;
+      const curY = margin.top + h - (Math.max(0, curS) / maxS) * h;
+      const eqY = margin.top + h - (eqS / maxS) * h;
+
+      // Vertical line showing deviation ΔS due to pressure displacement
+      if (Math.abs(curY - eqY) > 2) {
+        pCtx.strokeStyle = curS > eqS ? "#4ade80" : "#f43f5e";
+        pCtx.lineWidth = 2.5;
+        pCtx.beginPath();
+        pCtx.moveTo(curX, eqY);
+        pCtx.lineTo(curX, curY);
+        pCtx.stroke();
+
+        pCtx.fillStyle = curS > eqS ? "#4ade80" : "#f43f5e";
+        pCtx.font = "10px monospace";
+        pCtx.fillText(curS > eqS ? "+ΔS (Expanded)" : "-ΔS (Compressed)", curX + 8, (curY + eqY) / 2);
+      }
+
+      // Projections to Axes
+      pCtx.setLineDash([3, 3]);
+      pCtx.strokeStyle = "#94a3b8";
+      pCtx.lineWidth = 1;
+      pCtx.beginPath();
+      pCtx.moveTo(curX, curY);
+      pCtx.lineTo(curX, margin.top + h);
+      pCtx.moveTo(curX, curY);
+      pCtx.lineTo(margin.left, curY);
+      pCtx.stroke();
+      pCtx.setLineDash([]);
+
+      // Baseline reference node
+      pCtx.beginPath();
+      pCtx.arc(curX, eqY, 3.5, 0, Math.PI * 2);
+      pCtx.fillStyle = "#64748b";
+      pCtx.fill();
+
+      // Current State Point (Glowing)
+      const grad = pCtx.createRadialGradient(curX, curY, 2, curX, curY, 12);
+      grad.addColorStop(0, "rgba(250, 204, 21, 0.9)");
+      grad.addColorStop(1, "rgba(250, 204, 21, 0.0)");
+      pCtx.fillStyle = grad;
+      pCtx.beginPath();
+      pCtx.arc(curX, curY, 12, 0, Math.PI * 2);
+      pCtx.fill();
+
+      pCtx.beginPath();
+      pCtx.arc(curX, curY, 5.5, 0, Math.PI * 2);
+      pCtx.fillStyle = "#facc15";
+      pCtx.fill();
+      pCtx.strokeStyle = "#0f172a";
+      pCtx.lineWidth = 1.5;
+      pCtx.stroke();
+
+      // Readout tooltip
+      const labelText = `(N=${Math.round(curN)}, S=${curS.toFixed(2)} S₀)`;
+      pCtx.font = "bold 11px monospace";
+      const txtWidth = pCtx.measureText(labelText).width;
+      const boxX = Math.min(curX + 12, plotCanvas.width - txtWidth - 16);
+      const boxY = Math.max(curY - 14, margin.top + 6);
+
+      pCtx.fillStyle = "#0284c7";
+      pCtx.beginPath();
+      pCtx.roundRect(boxX, boxY - 12, txtWidth + 10, 18, 4);
+      pCtx.fill();
+
+      pCtx.fillStyle = "#ffffff";
+      pCtx.fillText(labelText, boxX + 5, boxY + 1);
+    }
+
+    function step() {
+      if (particles.length < targetN) particles.push(new Particle(pistonX));
+      else if (particles.length > targetN) particles.pop();
+      currentN = particles.length;
+
+      const targetPistonX = basePistonX * (currentN / baseN);
+
+      if (!isDraggingPiston) {
+        const force = (targetPistonX - pistonX) * 0.025;
+        pistonVx += force;
+        pistonVx *= 0.85;
+        pistonX += pistonVx;
+      }
+
+      particles.forEach(p => {
+        if (p.x > pistonX - p.radius) p.x = pistonX - p.radius - 2;
+      });
+
+      const effectiveVolRatio = Math.max(0.2, pistonX / basePistonX);
+      const pressureRatio = (currentN / baseN) / effectiveVolRatio;
+
+      const sEq = currentN / baseN;
+      const entropyRatio = (currentN / baseN) * (1.0 - (1.0 / s0_over_kB) * Math.log(pressureRatio));
+
+      gCtx.clearRect(0, 0, gasCanvas.width, gasCanvas.height);
+
+      particles.forEach(p => {
+        p.update(pistonX);
+        p.draw();
+      });
+
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.x += s.dx;
+        s.y += s.dy;
+        s.life -= 0.08;
+        if (s.life <= 0) { sparks.splice(i, 1); continue; }
+        gCtx.beginPath();
+        gCtx.arc(s.x, s.y, 1.8, 0, Math.PI * 2);
+        gCtx.fillStyle = `rgba(250, 204, 21, ${s.life})`;
+        gCtx.fill();
+      }
+
+      gCtx.fillStyle = isDraggingPiston ? "#38bdf8" : "#e2e8f0";
+      gCtx.fillRect(pistonX, 0, 12, gasCanvas.height);
+
+      gCtx.fillStyle = "#64748b";
+      gCtx.fillRect(pistonX + 12, gasCanvas.height / 2 - 7, gasCanvas.width - pistonX, 14);
+
+      gCtx.strokeStyle = "#334155";
+      gCtx.lineWidth = 1.5;
+      for (let y = 30; y < gasCanvas.height; y += 30) {
+        gCtx.beginPath();
+        gCtx.moveTo(pistonX + 3, y);
+        gCtx.lineTo(pistonX + 9, y);
+        gCtx.stroke();
+      }
+      gCtx.fillStyle = "#0f172a";
+      gCtx.font = "bold 10px sans-serif";
+      gCtx.fillText("PISTON", pistonX + 1, gasCanvas.height - 12);
+
+      drawPressureGauge(gasCanvas.width - 45, 45, pressureRatio);
+
+      renderPlot(currentN, entropyRatio, sEq);
+
+      document.getElementById("pressVal").innerText = `${pressureRatio.toFixed(2)} atm`;
+      document.getElementById("volVal").innerText = `${effectiveVolRatio.toFixed(2)} V₀`;
+      document.getElementById("eqEntropyVal").innerText = `${sEq.toFixed(2)} S₀`;
+      document.getElementById("entropyVal").innerText = `${entropyRatio.toFixed(2)} S₀`;
+
+      requestAnimationFrame(step);
+    }
+
+    step();
+  </script>
+</body>
+</html>
